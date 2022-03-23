@@ -12,14 +12,13 @@ namespace Gestion
 {
     class Api
     {
-        private string host;
-        private HttpClient client;
-        private static string token;
+        public string host = "http://172.31.247.13:5000";
+        public HttpClient client = new HttpClient();
+        private string token { get; set; }
 
-        public Api()
+        public Api() 
         {
-            host = "http://172.31.247.13:5000";
-            client = new HttpClient();
+            this.client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer " + this.token);
         }
 
         #region auth
@@ -34,11 +33,11 @@ namespace Gestion
 
                 //envoi de la requête api et récupération de la réponse
                 var content = new StringContent(JsonConvert.SerializeObject(tmpAuth), Encoding.UTF8, "application/json");
-                response = await client.PostAsync(host + "/api/v1/oauth/password", content);
+                response = await client.PostAsync(this.host + "/api/v1/oauth/password", content);
                 dynamic deserialize = JsonConvert.DeserializeObject(await response.Content.ReadAsStringAsync());
 
                 //stockage du token
-                token = deserialize.token;
+                this.token = deserialize.token;
 
                 //envoi de la réponse api
                 return response.StatusCode.ToString();
@@ -48,7 +47,7 @@ namespace Gestion
         }
         public void killtoken()
         {
-            token = "";
+            this.token = "";
         }
         #endregion
 

@@ -9,61 +9,23 @@ namespace Gestion
     class User
     {
         #region champs
-        private string _id;
-        private string _name;
-        private string _surname;
-        private string _mail;
-        private int _type;
-        private string _password;
+        public string id { get; set; }
+        public string name { get; set; }
+        public string surname { get; set; }    
+        public string mail { get; set; }
+        public int type { get; set; }
+        public string password { get; set; }
         #endregion
 
         #region constructeurs
         public User(string i, string n, string s, string m, int t, string p)
         {
-            _id = i;
-            _name = n;
-            _surname = s;
-            _mail = m;
-            _type = t;
-            _password = p;
-        }
-        #endregion
-
-        #region accesseurs/mutateurs
-        public string id
-        {
-            get { return _id; }
-            set { _id = value; }
-        }
-
-        public string name
-        {
-            get { return _name; }
-            set { _name = value; }
-        }
-
-        public string surname
-        {
-            get { return _surname; }
-            set { _surname = value; }
-        }
-
-        public string mail
-        {
-            get { return _mail; }
-            set { _mail = value; }
-        }
-
-        public int type
-        {
-            get { return _type; }
-            set { _type = value; }
-        }
-
-        public string password
-        {
-            get { return _password; }
-            set { _password = value; }
+            id = i;
+            name = n;
+            surname = s;
+            mail = m;
+            type = t;
+            password = p;
         }
         #endregion
     }
