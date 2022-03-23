@@ -1,0 +1,213 @@
+﻿<Window x:Class="Gestion.gestion"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Gestion"
+        mc:Ignorable="d"
+        Title="gestion" Height="900" Width="1600"
+        Background="#19191e">
+    <Grid>
+        <TabControl HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,3,0,0" Height="873" Width="1600" Background="#19191e" BorderBrush="#19191e">
+            <TabControl.Resources>
+                <Style TargetType="TabItem">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="TabItem">
+                                <Grid Name="Panel">
+                                    <ContentPresenter x:Name="ContentSite"
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Center"
+                                        ContentSource="Header"
+                                        Margin="10,2"/>
+                                </Grid>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsSelected" Value="True">
+                                        <Setter TargetName="Panel" Property="Background" Value="#19191e"/>
+                                    </Trigger>
+                                    <Trigger Property="IsSelected" Value="False">
+                                        <Setter TargetName="Panel" Property="Background" Value="#666"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </TabControl.Resources>
+<!--meeting-->
+            <TabItem Header="rendez-vous" FontSize="15px" Width="125px" Foreground="#ffffff">
+                <Grid>
+                    <ListBox HorizontalAlignment="Left" VerticalAlignment="Top" Margin="25,25,0,0" Width="800" Height="790" ItemsSource="{Binding}" Name="lstMeeting" SelectionChanged="lstMeeting_SelectionChanged">
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem">
+                                <Setter Property="Padding" Value="5"/>
+                                <Setter Property="Margin" Value="3"/>
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+                    </ListBox>
+
+                    <Label HorizontalAlignment="Center" VerticalAlignment="Top" Margin="400,25,0,0" Width="250" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="ID :"/>
+                    <TextBox HorizontalAlignment="Center" VerticalAlignment="Top" Margin="400,50,0,0" Width="250" Height="25" FontSize="15px" Foreground="#ffffff" Background="Transparent" IsEnabled="False" Name="txtIDMeeting"/>
+
+                    <Label HorizontalAlignment="Center" VerticalAlignment="Top" Margin="400,100,0,0" Width="250" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="Date :"/>
+                    <TextBox HorizontalAlignment="Center" VerticalAlignment="Top" Margin="400,125,0,0" Width="250" Height="25" FontSize="15px" Foreground="#ffffff" Background="Transparent" Name="txtDateMeeting"/>
+
+                    <Label HorizontalAlignment="Center" VerticalAlignment="Top" Margin="1025,25,0,0" Width="250" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="Code postal :"/>
+                    <TextBox HorizontalAlignment="Center" VerticalAlignment="Top" Margin="1025,50,0,0" Width="250" Height="25" FontSize="15px" Foreground="#ffffff" Background="Transparent" Name="txtZipMeeting"/>
+
+                    <Label HorizontalAlignment="Center" VerticalAlignment="Top" Margin="1025,100,0,0" Width="250" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="Adresse :"/>
+                    <TextBox HorizontalAlignment="Center" VerticalAlignment="Top" Margin="1025,125,0,0" Width="250" Height="25" FontSize="15px" Foreground="#ffffff" Background="Transparent" Name="txtAdressMeeting"/>
+
+
+                    <Label HorizontalAlignment="Center" VerticalAlignment="Top" Margin="400,175,0,0" Width="250" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="Tout les client :"/>
+                    <Label HorizontalAlignment="Center" VerticalAlignment="Top" Margin="1025,175,0,0" Width="250" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="Client au rendez-vous :"/>
+                    <ListBox HorizontalAlignment="Center" VerticalAlignment="Top" Margin="400,200,0,0" Width="250" Height="175" ItemsSource="{Binding}" Name="lstMeetingAllClient" SelectionChanged="lstProduct_SelectionChanged">
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem">
+                                <Setter Property="Padding" Value="5"/>
+                                <Setter Property="Margin" Value="3"/>
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+                    </ListBox>
+                    <ListBox HorizontalAlignment="Center" VerticalAlignment="Top" Margin="1025,200,0,0" Width="250" Height="175" ItemsSource="{Binding}" Name="lstMeetingClient" SelectionChanged="lstProduct_SelectionChanged">
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem">
+                                <Setter Property="Padding" Value="5"/>
+                                <Setter Property="Margin" Value="3"/>
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+                    </ListBox>
+                    <Button HorizontalAlignment="Center" VerticalAlignment="Top" Margin="710,250,0,0" Width="25" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="+" Name="meetingAddClient"/>
+                    <Button HorizontalAlignment="Center" VerticalAlignment="Top" Margin="710,300,0,0" Width="25" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="-" Name="meetingRemoveClient"/>
+
+
+                    <Label HorizontalAlignment="Center" VerticalAlignment="Top" Margin="400,400,0,0" Width="250" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="Tout les employé :"/>
+                    <Label HorizontalAlignment="Center" VerticalAlignment="Top" Margin="1025,400,0,0" Width="250" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="Employé en charge du rendez-vous :"/>
+                    <ListBox HorizontalAlignment="Center" VerticalAlignment="Top" Margin="400,425,0,0" Width="250" Height="175" ItemsSource="{Binding}" Name="lstMeetingAllEmployee" SelectionChanged="lstProduct_SelectionChanged">
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem">
+                                <Setter Property="Padding" Value="5"/>
+                                <Setter Property="Margin" Value="3"/>
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+                    </ListBox>
+                    <ListBox HorizontalAlignment="Center" VerticalAlignment="Top" Margin="1025,425,0,0" Width="250" Height="175" ItemsSource="{Binding}" Name="lstMeetingEmployee" SelectionChanged="lstProduct_SelectionChanged">
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem">
+                                <Setter Property="Padding" Value="5"/>
+                                <Setter Property="Margin" Value="3"/>
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+                    </ListBox>
+                    <Button HorizontalAlignment="Center" VerticalAlignment="Top" Margin="710,475,0,0" Width="25" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="+" Name="meetingAddEmployee"/>
+                    <Button HorizontalAlignment="Center" VerticalAlignment="Top" Margin="710,525,0,0" Width="25" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="-" Name="meetingRemoveEmployee"/>
+
+                    
+                    <Label HorizontalAlignment="Center" VerticalAlignment="Top" Margin="800,685,0,0" Height="25" FontSize="12px" Foreground="#ff0000" Background="Transparent" Visibility="Hidden" Content="Quelque chose ne va pas..." Name="lblWrongMeeting"/>
+
+                    <Button HorizontalAlignment="Center" VerticalAlignment="Top" Margin="350,725,0,0" Width="200" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="ajouter" Name="meetingAjouter" Click="meetingAjouter_Click"/>
+                    <Button HorizontalAlignment="Center" VerticalAlignment="Top" Margin="800,725,0,0" Width="200" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="modifier" Name="meetingModifier" Click="meetingModifier_Click"/>
+                    <Button HorizontalAlignment="Center" VerticalAlignment="Top" Margin="1250,725,0,0" Width="200" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="supprimer" Name="meetingSupprimer" Click="meetingSupprimer_Click"/>
+                    <Button HorizontalAlignment="Center" VerticalAlignment="Top" Margin="800,775,0,0" Width="200" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="rafraîchir" Name="meetingRefresh" Click="refresh_Click"/>
+                </Grid>
+            </TabItem>
+<!--product-->
+            <TabItem Header="produits" FontSize="15px" Width="125px" Foreground="#ffffff">
+                <Grid>
+                    <ListBox HorizontalAlignment="Left" VerticalAlignment="Top" Margin="25,25,0,0" Width="800" Height="790" ItemsSource="{Binding}" Name="lstProduct" SelectionChanged="lstProduct_SelectionChanged">
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem">
+                                <Setter Property="Padding" Value="5"/>
+                                <Setter Property="Margin" Value="3"/>
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+                    </ListBox>
+
+                    <Label HorizontalAlignment="Center" VerticalAlignment="Top" Margin="400,25,0,0" Width="250" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="ID :"/>
+                    <TextBox HorizontalAlignment="Center" VerticalAlignment="Top" Margin="400,50,0,0" Width="250" Height="25" FontSize="15px" Foreground="#ffffff" Background="Transparent" IsEnabled="False" Name="txtIDProduct"/>
+
+                    <Label HorizontalAlignment="Center" VerticalAlignment="Top" Margin="400,100,0,0" Width="250" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="Nom :"/>
+                    <TextBox HorizontalAlignment="Center" VerticalAlignment="Top" Margin="400,125,0,0" Width="250" Height="25" FontSize="15px" Foreground="#ffffff" Background="Transparent" Name="txtNameProduct"/>
+
+                    <Label HorizontalAlignment="Center" VerticalAlignment="Top" Margin="400,175,0,0" Width="250" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="Prix :"/>
+                    <TextBox HorizontalAlignment="Center" VerticalAlignment="Top" Margin="400,200,0,0" Width="250" Height="25" FontSize="15px" Foreground="#ffffff" Background="Transparent" Name="txtPriceProduct"/>
+
+                    <Label HorizontalAlignment="Center" VerticalAlignment="Top" Margin="400,250,0,0" Width="250" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="Quantité :"/>
+                    <TextBox HorizontalAlignment="Center" VerticalAlignment="Top" Margin="400,275,0,0" Width="250" Height="25" FontSize="15px" Foreground="#ffffff" Background="Transparent" Name="txtQuantityProduct"/>
+
+                    <Label HorizontalAlignment="Center" VerticalAlignment="Top" Margin="1025,25,0,0" Width="250" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="Description :"/>
+                    <TextBox HorizontalAlignment="Center" VerticalAlignment="Top" Margin="1123,50,0,0" Width="350" Height="250" FontSize="15px" Foreground="#ffffff" Background="Transparent" TextWrapping="Wrap" Name="txtDescriptionProduct"/>
+
+                    <Label HorizontalAlignment="Center" VerticalAlignment="Top" Margin="800,685,0,0" Height="25" FontSize="12px" Foreground="#ff0000" Background="Transparent" Visibility="Hidden" Content="Quelque chose ne va pas..." Name="lblWrongProduct"/>
+                    <Label HorizontalAlignment="Center" VerticalAlignment="Top" Margin="800,685,0,0" Height="25" FontSize="12px" Foreground="#ff0000" Background="Transparent" Visibility="Hidden" Content="Vous n'êtes pas autorisé à faire ça..." Name="lblUnauthorizedProduct"/>
+
+                    <Grid x:Name="image" Margin="872,355,60,171" Background="#ffffff">
+                        <Label HorizontalAlignment="Center" VerticalAlignment="center" Content="IMAGE"/>
+                    </Grid>
+
+                    <Button HorizontalAlignment="Center" VerticalAlignment="Top" Margin="350,725,0,0" Width="200" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="ajouter" Name="productAjouter" Click="productAjouter_Click"/>
+                    <Button HorizontalAlignment="Center" VerticalAlignment="Top" Margin="800,725,0,0" Width="200" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="modifier" Name="productModifier" Click="productModifier_Click"/>
+                    <Button HorizontalAlignment="Center" VerticalAlignment="Top" Margin="1250,725,0,0" Width="200" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="supprimer" Name="productSupprimer" Click="productSupprimer_Click"/>
+                    <Button HorizontalAlignment="Center" VerticalAlignment="Top" Margin="800,775,0,0" Width="200" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="rafraîchir" Name="productRefresh" Click="refresh_Click"/>
+                </Grid>
+            </TabItem>
+<!--user-->
+            <TabItem Header="utilisateurs" FontSize="15px" Width="125px" Foreground="#ffffff">
+                <Grid>
+                    <ListBox HorizontalAlignment="Left" VerticalAlignment="Top" Margin="25,25,0,0" Width="800" Height="790" ItemsSource="{Binding}" Name="lstUser" SelectionChanged="lstUser_SelectionChanged">
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem">
+                                <Setter Property="Padding" Value="5"/>
+                                <Setter Property="Margin" Value="3"/>
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+                    </ListBox>
+
+                    <Label HorizontalAlignment="Center" VerticalAlignment="Top" Margin="400,25,0,0" Width="250" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="ID :"/>
+                    <TextBox HorizontalAlignment="Center" VerticalAlignment="Top" Margin="400,50,0,0" Width="250" Height="25" FontSize="15px" Foreground="#ffffff" Background="Transparent" IsEnabled="False" Name="txtIDUser"/>
+
+                    <Label HorizontalAlignment="Center" VerticalAlignment="Top" Margin="400,100,0,0" Width="250" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="Nom :"/>
+                    <TextBox HorizontalAlignment="Center" VerticalAlignment="Top" Margin="400,125,0,0" Width="250" Height="25" FontSize="15px" Foreground="#ffffff" Background="Transparent" Name="txtNameUser"/>
+
+                    <Label HorizontalAlignment="Center" VerticalAlignment="Top" Margin="400,175,0,0" Width="250" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="Prénom :"/>
+                    <TextBox HorizontalAlignment="Center" VerticalAlignment="Top" Margin="400,200,0,0" Width="250" Height="25" FontSize="15px" Foreground="#ffffff" Background="Transparent" Name="txtSurnameUser"/>
+
+                    <Label HorizontalAlignment="Center" VerticalAlignment="Top" Margin="400,250,0,0" Width="250" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="Mail :"/>
+                    <TextBox HorizontalAlignment="Center" VerticalAlignment="Top" Margin="400,275,0,0" Width="250" Height="25" FontSize="15px" Foreground="#ffffff" Background="Transparent" Name="txtMailUser"/>
+
+                    <Label HorizontalAlignment="Center" VerticalAlignment="Top" Margin="400,325,0,0" Width="250" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="Type de compte :"/>
+                    <ComboBox HorizontalAlignment="Center" VerticalAlignment="Top" Margin="400,350,0,0" Width="250" Height="25" FontSize="15px" Foreground="#19191e" Name="cboUserType" SelectionChanged="cboUserType_SelectionChanged">
+                        <ComboBoxItem Content="administrateur" Foreground="#19191e" Name="userType0"/>
+                        <ComboBoxItem Content="employé" Foreground="#19191e" Name="userType1"/>
+                        <ComboBoxItem Content="client" Foreground="#19191e" Name="userType2"/>
+                        <ComboBoxItem Content="prospect" Foreground="#19191e" Name="userType3"/>
+                    </ComboBox>
+
+                    <Grid Name="changePassword" Visibility="Visible">
+                        <Label HorizontalAlignment="Center" VerticalAlignment="Top" Margin="1025,25,0,0" Width="250" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="Mot de passe :"/>
+                        <PasswordBox HorizontalAlignment="Center" VerticalAlignment="Top" Margin="1025,50,0,0" Width="250" Height="25" FontSize="15px" Foreground="#ffffff" Background="Transparent" IsEnabled="False" Name="txtPasswordUser"/>
+
+                        <!--<Label HorizontalAlignment="Center" VerticalAlignment="Top" Margin="1025,100,0,0" Width="250" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="nouveau mot de passe :"/>
+                        <PasswordBox HorizontalAlignment="Center" VerticalAlignment="Top" Margin="1025,125,0,0" Width="250" Height="25" FontSize="15px" Foreground="#ffffff" Background="Transparent" IsEnabled="False" Name="txtNewPassword"/>
+
+                        <Label HorizontalAlignment="Center" VerticalAlignment="Top" Margin="1025,175,0,0" Width="250" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="confirmer le mot de passe :"/>
+                        <PasswordBox HorizontalAlignment="Center" VerticalAlignment="Top" Margin="1025,200,0,0" Width="250" Height="25" FontSize="15px" Foreground="#ffffff" Background="Transparent" IsEnabled="False" Name="txtConfirmPassword"/>-->
+                    </Grid>
+                    <Grid Name="resetPassword" Visibility="Hidden">
+                        <Button HorizontalAlignment="Center" VerticalAlignment="Top" Margin="1025,50,0,0" Width="250" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="réinitialiser le mot de passe"/>
+                    </Grid>
+
+                    <Label HorizontalAlignment="Center" VerticalAlignment="Top" Margin="400,625,0,0" Height="25" FontSize="12px" Foreground="#ff0000" Background="Transparent" Visibility="Hidden" Content="Quelque chose ne va pas..." Name="lblWrongUser"/>
+                    <Label HorizontalAlignment="Center" VerticalAlignment="Top" Margin="400,650,0,0" Height="25" FontSize="12px" Foreground="#ff0000" Background="Transparent" Visibility="Hidden" Content="Mot de passe incorrect" Name="lblWrongPassword"/>
+                    <Label HorizontalAlignment="Center" VerticalAlignment="Top" Margin="400,675,0,0" Height="25" FontSize="12px" Foreground="#ff0000" Background="Transparent" Visibility="Hidden" Content="Les deux mots de passe ne correspondent pas" Name="lblWrongPassword2"/>
+
+                    <Button HorizontalAlignment="Center" VerticalAlignment="Top" Margin="350,725,0,0" Width="200" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="ajouter" Name="userAjouter" Click="userAjouter_Click"/>
+                    <Button HorizontalAlignment="Center" VerticalAlignment="Top" Margin="800,725,0,0" Width="200" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="modifier" Name="userModifier" Click="userModifier_Click"/>
+                    <Button HorizontalAlignment="Center" VerticalAlignment="Top" Margin="1250,725,0,0" Width="200" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="supprimer" Name="userSupprimer" Click="userSupprimer_Click"/>
+                    <Button HorizontalAlignment="Center" VerticalAlignment="Top" Margin="800,775,0,0" Width="200" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="rafraîchir" Name="userRefresh" Click="refresh_Click"/>
+                </Grid>
+            </TabItem>
+        </TabControl>
+        <Button HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,5,5,0" Width="200" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="déconnexion" Name="disconnect" Click="disconnect_Click"/>
+    </Grid>
+</Window>

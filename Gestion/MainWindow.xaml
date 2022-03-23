@@ -1,0 +1,24 @@
+﻿<Window x:Class="Gestion.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Gestion"
+        mc:Ignorable="d"
+        Title="connexion" Height="900" Width="1600"
+        WindowState="Maximized"
+        Background="#2d2d32">
+    <Grid>
+        <Label HorizontalAlignment="Center" VerticalAlignment="Top" Padding="25px" FontWeight="Bold" FontSize="50px" Foreground="#ffffff" Content="Gestion"/>
+        
+        <Label HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,225,0,0" Width="250" Height="25" FontSize="12px" Foreground="#ffffff" Content="Identifiant :"/>
+        <TextBox HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,250,0,0" Width="250" Height="25" FontSize="15px" Foreground="#ffffff" Background="Transparent" Name="txtID" TextChanged="txtID_TextChanged"/>
+        
+        <Label HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,275,0,0" Width="250" Height="25" FontSize="12px" Foreground="#ffffff" Content="Mot de passe :"/>
+        <PasswordBox HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,300,0,0" Width="250" Height="25" FontSize="15px" Foreground="#ffffff" Background="Transparent" Name="txtPW" PasswordChanged="txtPW_PasswordChanged"/>
+        
+        <Button HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,350,0,0" Width="150" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="Valider" Name="btnSession" Click="btnSession_Click"/>
+        <Label HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,380,0,0" FontSize="15px" Foreground="#ff0000" Content="Identifiant ou mot de passe invalide." Visibility="Hidden" Name="lblWrong"/>
+        <Label HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,380,0,0" FontSize="15px" Foreground="#ff0000" Content="Problème lors de la connexion avec la base de donnée" Visibility="Hidden" Name="lblWrong2"/>
+    </Grid>
+</Window>
