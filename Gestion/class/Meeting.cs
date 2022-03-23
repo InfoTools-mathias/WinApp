@@ -6,18 +6,18 @@ using System.Threading.Tasks;
 
 namespace Gestion
 {
-    class meeting
+    class Meeting
     {
         #region champs
         private string _id;
         private DateTime _date;
         private string _zip;
         private string _adress;
-        private List<user> _users;
+        private List<User> _users;
         #endregion
 
         #region constructeurs
-        public meeting(string id, DateTime date, string zip, string adress, List<user> users)
+        public Meeting(string id, DateTime date, string zip, string adress, List<User> users)
         {
             _id = id;
             _date = date;
@@ -48,7 +48,7 @@ namespace Gestion
             get { return _adress; }
             set { _adress = value; }
         }
-        public List<user> users
+        public List<User> users
         {
             get { return _users; }
             set { _users = value; }

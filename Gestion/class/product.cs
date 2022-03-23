@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Gestion
 {
-    class product
+    class Product
     {
         #region champs
         private string _id;
@@ -18,7 +18,7 @@ namespace Gestion
         #endregion
 
         #region constructeurs
-        public product(string id, string n, double p, int q, string d, List<categorie> t)
+        public Product(string id, string n, double p, int q, string d, List<categorie> t)
         {
             _id = id;
             _name = n;

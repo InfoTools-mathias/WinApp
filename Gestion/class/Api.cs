@@ -54,33 +54,33 @@ namespace Gestion
 
 
         #region meeting
-        public async Task<List<meeting>> getMeetings()
+        public async Task<List<Meeting>> getMeetings()
         {
             HttpResponseMessage response = await client.GetAsync(host + "/api/v1/meetings");
             string parseResponse = await response.Content.ReadAsStringAsync();
             dynamic parsed = JsonConvert.DeserializeObject(parseResponse);
 
-            List<meeting> cMeeting = new List<meeting>();
+            List<Meeting> cMeeting = new List<Meeting>();
             foreach (dynamic i in parsed)
             {
-                List<user> cUser = new List<user>();
+                List<User> cUser = new List<User>();
                 foreach (dynamic y in i.users)
                 {
-                    user user = new user(Convert.ToString(y.id), Convert.ToString(y.name), Convert.ToString(y.surname), Convert.ToString(y.mail), Convert.ToInt16(y.type), Convert.ToString(y.password));
+                    User user = new User(Convert.ToString(y.id), Convert.ToString(y.name), Convert.ToString(y.surname), Convert.ToString(y.mail), Convert.ToInt16(y.type), Convert.ToString(y.password));
                     cUser.Add(user);
                 }
-                meeting meeting = new meeting(Convert.ToString(i.id), Convert.ToDateTime(i.date), Convert.ToString(i.zip), Convert.ToString(i.adress), cUser);
+                Meeting meeting = new Meeting(Convert.ToString(i.id), Convert.ToDateTime(i.date), Convert.ToString(i.zip), Convert.ToString(i.adress), cUser);
                 cMeeting.Add(meeting);
             }
             return cMeeting;
         }
-        public async Task<HttpResponseMessage> postMeeting(meeting tmpMeeting)
+        public async Task<HttpResponseMessage> postMeeting(Meeting tmpMeeting)
         {
             //client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             var content = new StringContent(JsonConvert.SerializeObject(tmpMeeting), Encoding.UTF8, "application/json");
             return await client.PostAsync(host + "/api/v1/meetings", content);
         }
-        public async Task<HttpResponseMessage> putMeeting(meeting tmpMeeting)
+        public async Task<HttpResponseMessage> putMeeting(Meeting tmpMeeting)
         {
             //client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             var content = new StringContent(JsonConvert.SerializeObject(tmpMeeting), Encoding.UTF8, "application/json");
@@ -94,13 +94,13 @@ namespace Gestion
         #endregion
 
         #region product
-        public async Task<List<product>> getProducts()
+        public async Task<List<Product>> getProducts()
         {
             HttpResponseMessage response = await client.GetAsync(host + "/api/v1/products");
             string parseResponse = await response.Content.ReadAsStringAsync();
             dynamic parsed = JsonConvert.DeserializeObject(parseResponse);
 
-            List<product> cProduct = new List<product>();
+            List<Product> cProduct = new List<Product>();
             foreach (dynamic i in parsed)
             {
                 List<categorie> cType = new List<categorie>();
@@ -109,18 +109,18 @@ namespace Gestion
                     categorie thisType = new categorie(Convert.ToString(y.id), Convert.ToString(y.name));
                     cType.Add(thisType);
                 }
-                product produit = new product(Convert.ToString(i.id), Convert.ToString(i.name), Convert.ToDouble(i.price), Convert.ToInt16(i.quantity), Convert.ToString(i.description), cType);
+                Product produit = new Product(Convert.ToString(i.id), Convert.ToString(i.name), Convert.ToDouble(i.price), Convert.ToInt16(i.quantity), Convert.ToString(i.description), cType);
                 cProduct.Add(produit);
             }
             return cProduct;
         }
-        public async Task<HttpResponseMessage> postProduct(product tmpProduct)
+        public async Task<HttpResponseMessage> postProduct(Product tmpProduct)
         {
             //client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             var content = new StringContent(JsonConvert.SerializeObject(tmpProduct), Encoding.UTF8, "application/json");
             return await client.PostAsync(host + "/api/v1/products", content);
         }
-        public async Task<HttpResponseMessage> putProduct(product tmpProduct)
+        public async Task<HttpResponseMessage> putProduct(Product tmpProduct)
         {
             //client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             var content = new StringContent(JsonConvert.SerializeObject(tmpProduct), Encoding.UTF8, "application/json");
@@ -134,27 +134,27 @@ namespace Gestion
         #endregion
 
         #region user
-        public async Task<List<user>> getUsers()
+        public async Task<List<User>> getUsers()
         {
             HttpResponseMessage response = await client.GetAsync(host + "/api/v1/users");
             string parseResponse = await response.Content.ReadAsStringAsync();
             dynamic parsed = JsonConvert.DeserializeObject(parseResponse);
 
-            List<user> cUser = new List<user>();
+            List<User> cUser = new List<User>();
             foreach (dynamic i in parsed)
             {
-                user utilisateur = new user(Convert.ToString(i.id), Convert.ToString(i.name), Convert.ToString(i.surname), Convert.ToString(i.mail), Convert.ToInt16(i.type), Convert.ToString(i.password));
+                User utilisateur = new User(Convert.ToString(i.id), Convert.ToString(i.name), Convert.ToString(i.surname), Convert.ToString(i.mail), Convert.ToInt16(i.type), Convert.ToString(i.password));
                 cUser.Add(utilisateur);
             }
             return cUser;
         }
-        public async Task<HttpResponseMessage> postUser(user tmpUser)
+        public async Task<HttpResponseMessage> postUser(User tmpUser)
         {
             //client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             var content = new StringContent(JsonConvert.SerializeObject(tmpUser), Encoding.UTF8, "application/json");
             return await client.PostAsync(host + "/api/v1/users", content);
         }
-        public async Task<HttpResponseMessage> putUser(user tmpUser)
+        public async Task<HttpResponseMessage> putUser(User tmpUser)
         {
             //client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             var content = new StringContent(JsonConvert.SerializeObject(tmpUser), Encoding.UTF8, "application/json");

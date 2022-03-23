@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Gestion
 {
-    class user
+    class User
     {
         #region champs
         private string _id;
@@ -18,7 +18,7 @@ namespace Gestion
         #endregion
 
         #region constructeurs
-        public user(string i, string n, string s, string m, int t, string p)
+        public User(string i, string n, string s, string m, int t, string p)
         {
             _id = i;
             _name = n;

@@ -25,9 +25,9 @@ namespace Gestion
             refresh();
         }
         Api api = new Api();
-        List<meeting> cMeeting = new List<meeting>();
-        List<product> cProduct = new List<product>();
-        List<user> cUser = new List<user>();
+        List<Meeting> cMeeting = new List<Meeting>();
+        List<Product> cProduct = new List<Product>();
+        List<User> cUser = new List<User>();
 
         #region fonction refresh()
         async public void refresh()
@@ -38,7 +38,7 @@ namespace Gestion
                 // PRODUCT : réinitialisation de la liste -> appel API -> remplissage de la liste
                 lstProduct.Items.Clear();
                 cProduct = await api.getProducts();
-                foreach(product i in cProduct)
+                foreach(Product i in cProduct)
                 {
                     string data = "";
                     data += i.name + "\n(";
@@ -62,7 +62,7 @@ namespace Gestion
                 // USER : réinitialisation de la liste -> appel API -> remplissage de la liste
                 lstUser.Items.Clear();
                 cUser = await api.getUsers();
-                foreach (user i in cUser)
+                foreach (User i in cUser)
                 {
                     string data = "";
                     data += i.name + " " + i.surname;
@@ -75,7 +75,7 @@ namespace Gestion
                 lstMeetingAllClient.Items.Clear();
                 lstMeetingAllEmployee.Items.Clear();
                 cMeeting = await api.getMeetings();
-                foreach(meeting i in cMeeting)
+                foreach(Meeting i in cMeeting)
                 {
                     string data = "";
                     data += "Date : " + i.date;
@@ -84,7 +84,7 @@ namespace Gestion
                     string dataClient = "";
                     Boolean firstEmployee = true;
                     Boolean firstClient = true;
-                    foreach (user user in i.users)
+                    foreach (User user in i.users)
                     {
                         if(user.type == 0 || user.type == 1)
                         {
@@ -115,7 +115,7 @@ namespace Gestion
                     data += "\nClient(e)(s) : " + dataClient;
                     lstMeeting.Items.Add(data);
                 }
-                foreach(user user in cUser)
+                foreach(User user in cUser)
                 {
                     string data = "";
                     data += user.id;
@@ -184,7 +184,7 @@ namespace Gestion
             {
                 if (lstMeeting.SelectedIndex > -1)
                 {
-                    meeting meetingSelected = cMeeting[lstMeeting.SelectedIndex];
+                    Meeting meetingSelected = cMeeting[lstMeeting.SelectedIndex];
 
                     txtIDMeeting.Text = meetingSelected.id;
                     txtDateMeeting.Text = Convert.ToString(meetingSelected.date);
@@ -193,7 +193,7 @@ namespace Gestion
 
                     lstMeetingClient.Items.Clear();
                     lstMeetingEmployee.Items.Clear();
-                    foreach (user user in meetingSelected.users)
+                    foreach (User user in meetingSelected.users)
                     {
                         string data = "";
                         data += user.id;
@@ -210,7 +210,7 @@ namespace Gestion
 
                     lstMeetingAllClient.Items.Clear();
                     lstMeetingAllEmployee.Items.Clear();
-                    foreach (user user in cUser)
+                    foreach (User user in cUser)
                     {
                         if (meetingSelected.users.Contains(user))
                         {
@@ -234,7 +234,7 @@ namespace Gestion
                     txtDateMeeting.Text = "";
                     txtZipMeeting.Text = "";
                     txtAdressMeeting.Text = "";
-                    foreach (user user in cUser)
+                    foreach (User user in cUser)
                     {
                         string data = "";
                         data += user.id;
@@ -317,7 +317,7 @@ namespace Gestion
             {
                 if (lstProduct.SelectedIndex > -1)
                 {
-                    product productSelected = cProduct[lstProduct.SelectedIndex];
+                    Product productSelected = cProduct[lstProduct.SelectedIndex];
 
                     txtIDProduct.Text = productSelected.id;
                     txtNameProduct.Text = productSelected.name;
@@ -345,7 +345,7 @@ namespace Gestion
             {
                 if (txtNameProduct.Text != "" || txtPriceProduct.Text != "" || txtQuantityProduct.Text != "" || txtDescriptionProduct.Text != "")
                 {
-                    product tmpProduct = new product("", txtNameProduct.Text, Convert.ToDouble(txtPriceProduct.Text), Convert.ToInt32(txtQuantityProduct.Text), txtDescriptionProduct.Text, null);
+                    Product tmpProduct = new Product("", txtNameProduct.Text, Convert.ToDouble(txtPriceProduct.Text), Convert.ToInt32(txtQuantityProduct.Text), txtDescriptionProduct.Text, null);
                     await api.postProduct(tmpProduct);
                     refresh();
                 }
@@ -365,7 +365,7 @@ namespace Gestion
             {
                 if (txtIDProduct.Text != "" || txtNameProduct.Text != "" || txtPriceProduct.Text != "" || txtQuantityProduct.Text != "" || txtDescriptionProduct.Text != "")
                 {
-                    product tmpProduct = new product(txtIDProduct.Text, txtNameProduct.Text, Convert.ToDouble(txtPriceProduct.Text), Convert.ToInt32(txtQuantityProduct.Text), txtDescriptionProduct.Text, null);
+                    Product tmpProduct = new Product(txtIDProduct.Text, txtNameProduct.Text, Convert.ToDouble(txtPriceProduct.Text), Convert.ToInt32(txtQuantityProduct.Text), txtDescriptionProduct.Text, null);
                     await api.putProduct(tmpProduct);
                     refresh();
                 }
@@ -399,7 +399,7 @@ namespace Gestion
             {
                 if (lstUser.SelectedIndex > -1)
                 {
-                    user selectedUser = cUser[lstUser.SelectedIndex];
+                    User selectedUser = cUser[lstUser.SelectedIndex];
 
                     txtIDUser.Text = selectedUser.id;
                     txtNameUser.Text = selectedUser.name;
@@ -429,7 +429,7 @@ namespace Gestion
             {
                 if (txtNameUser.Text != "" || txtSurnameUser.Text != "" || txtMailUser.Text != "" || cboUserType.Text != null)
                 {
-                    user tmpUser = new user("", txtNameUser.Text, txtSurnameUser.Text, txtMailUser.Text, GetIntType(cboUserType.Text), txtPasswordUser.Password);
+                    User tmpUser = new User("", txtNameUser.Text, txtSurnameUser.Text, txtMailUser.Text, GetIntType(cboUserType.Text), txtPasswordUser.Password);
                     await api.postUser(tmpUser);
                     refresh();
                 }
@@ -449,7 +449,7 @@ namespace Gestion
             {
                 if (txtIDUser.Text != "" || txtNameUser.Text != "" || txtSurnameUser.Text != "" || txtMailUser.Text != "" || cboUserType.SelectedValue != null)
                 {
-                    user tmpUser = new user(txtIDUser.Text, txtNameUser.Text, txtSurnameUser.Text, txtMailUser.Text, GetIntType(cboUserType.Text), txtPasswordUser.Password);
+                    User tmpUser = new User(txtIDUser.Text, txtNameUser.Text, txtSurnameUser.Text, txtMailUser.Text, GetIntType(cboUserType.Text), txtPasswordUser.Password);
                     await api.putUser(tmpUser);
                     refresh();
                 }

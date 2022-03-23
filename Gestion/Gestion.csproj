@@ -61,8 +61,8 @@
     <Compile Include="gestion.xaml.cs">
       <DependentUpon>gestion.xaml</DependentUpon>
     </Compile>
-    <Compile Include="meeting.cs" />
-    <Compile Include="user.cs" />
+    <Compile Include="class\Meeting.cs" />
+    <Compile Include="class\User.cs" />
     <Page Include="gestion.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -71,7 +71,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="api.cs" />
+    <Compile Include="class\Api.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -82,7 +82,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="product.cs" />
+    <Compile Include="class\Product.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
