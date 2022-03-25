@@ -15,7 +15,7 @@ namespace Gestion
 
         public async Task<string> Get()
         {
-            client.users.cache.Clear();
+            cache.Clear();
             dynamic users = await client.GetRequest(url);
 
             foreach (dynamic u in users)
@@ -69,15 +69,15 @@ namespace Gestion
             switch (id)
             {
                 case 0:
-                    return "administrateur";
+                    return "Administrateur";
                 case 1:
-                    return "employé";
+                    return "Employé";
                 case 2:
-                    return "client";
+                    return "Client";
                 case 3:
-                    return "prospect";
+                    return "Prospect";
                 default:
-                    return "prospect";
+                    return "Prospect";
             }
         }
     }

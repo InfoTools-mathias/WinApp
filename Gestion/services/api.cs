@@ -15,12 +15,14 @@ namespace Gestion
         public string host = "http://localhost:5000";
         public HttpClient client = new HttpClient();
 
+        public CategorieService categories { get; set; }
         public MeetingService meetings { get; set; }
         public ProductService products { get; set; }
         public UserService users { get; set; }
         public Api()
         {
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            categories = new CategorieService(this);
             meetings = new MeetingService(this);
             products = new ProductService(this);
             users = new UserService(this);
@@ -28,6 +30,7 @@ namespace Gestion
 
         public async Task<string> Start()
         {
+            await categories.Get();
             await meetings.Get();
             await products.Get();
             await users.Get();

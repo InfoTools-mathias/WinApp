@@ -80,9 +80,9 @@
                     <TextBox HorizontalAlignment="Center" VerticalAlignment="Top" Margin="1025,125,0,0" Width="250" Height="25" FontSize="15px" Foreground="#ffffff" Background="Transparent" Name="txtAdressMeeting"/>
 
 
-                    <Label HorizontalAlignment="Center" VerticalAlignment="Top" Margin="400,200,0,0" Width="250" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="Tout les client :"/>
-                    <Label HorizontalAlignment="Center" VerticalAlignment="Top" Margin="1025,200,0,0" Width="250" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="Client au rendez-vous :"/>
-                    <ListBox HorizontalAlignment="Center" VerticalAlignment="Top" Margin="400,225,0,0" Width="250" Height="175" ItemsSource="{Binding}" Name="lstMeetingAllClient" SelectionChanged="lstMeetingAllClient_SelectionChanged">
+                    <Label HorizontalAlignment="Center" VerticalAlignment="Top" Margin="400,200,0,0" Width="250" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="Tous les clients :"/>
+                    <Label HorizontalAlignment="Center" VerticalAlignment="Top" Margin="1025,200,0,0" Width="250" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="Clients au rendez-vous :"/>
+                    <ListBox HorizontalAlignment="Center" VerticalAlignment="Top" Margin="400,225,0,0" Width="250" Height="175" ItemsSource="{Binding}" Name="lstCustomerNotAtMeeting" SelectionChanged="lstCustomerNotAtMeeting_SelectionChanged">
                         <ListBox.ItemContainerStyle>
                             <Style TargetType="ListBoxItem">
                                 <Setter Property="Padding" Value="5"/>
@@ -90,7 +90,7 @@
                             </Style>
                         </ListBox.ItemContainerStyle>
                     </ListBox>
-                    <ListBox HorizontalAlignment="Center" VerticalAlignment="Top" Margin="1025,225,0,0" Width="250" Height="175" ItemsSource="{Binding}" Name="lstMeetingClient" SelectionChanged="lstMeetingClient_SelectionChanged">
+                    <ListBox HorizontalAlignment="Center" VerticalAlignment="Top" Margin="1025,225,0,0" Width="250" Height="175" ItemsSource="{Binding}" Name="lstCustomerAtMeeting" SelectionChanged="lstCustomerAtMeeting_SelectionChanged">
                         <ListBox.ItemContainerStyle>
                             <Style TargetType="ListBoxItem">
                                 <Setter Property="Padding" Value="5"/>
@@ -100,9 +100,9 @@
                     </ListBox>
 
 
-                    <Label HorizontalAlignment="Center" VerticalAlignment="Top" Margin="400,425,0,0" Width="250" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="Tout les employé :"/>
-                    <Label HorizontalAlignment="Center" VerticalAlignment="Top" Margin="1025,425,0,0" Width="250" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="Employé en charge du rendez-vous :"/>
-                    <ListBox HorizontalAlignment="Center" VerticalAlignment="Top" Margin="400,450,0,0" Width="250" Height="175" ItemsSource="{Binding}" Name="lstMeetingAllEmployee" SelectionChanged="lstMeetingAllEmployee_SelectionChanged">
+                    <Label HorizontalAlignment="Center" VerticalAlignment="Top" Margin="400,425,0,0" Width="250" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="Tous les employés :"/>
+                    <Label HorizontalAlignment="Center" VerticalAlignment="Top" Margin="1025,425,0,0" Width="250" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="Employés en charge du rendez-vous :"/>
+                    <ListBox HorizontalAlignment="Center" VerticalAlignment="Top" Margin="400,450,0,0" Width="250" Height="175" ItemsSource="{Binding}" Name="lstEmployeeNotAtMeeting" SelectionChanged="lstEmployeeNotAtMeeting_SelectionChanged">
                         <ListBox.ItemContainerStyle>
                             <Style TargetType="ListBoxItem">
                                 <Setter Property="Padding" Value="5"/>
@@ -110,7 +110,7 @@
                             </Style>
                         </ListBox.ItemContainerStyle>
                     </ListBox>
-                    <ListBox HorizontalAlignment="Center" VerticalAlignment="Top" Margin="1025,450,0,0" Width="250" Height="175" ItemsSource="{Binding}" Name="lstMeetingEmployee" SelectionChanged="lstMeetingEmployee_SelectionChanged">
+                    <ListBox HorizontalAlignment="Center" VerticalAlignment="Top" Margin="1025,450,0,0" Width="250" Height="175" ItemsSource="{Binding}" Name="lstEmployeeAtMeeting" SelectionChanged="lstEmployeeAtMeeting_SelectionChanged">
                         <ListBox.ItemContainerStyle>
                             <Style TargetType="ListBoxItem">
                                 <Setter Property="Padding" Value="5"/>
@@ -156,6 +156,25 @@
                         <Label HorizontalAlignment="Center" VerticalAlignment="center" Content="IMAGE"/>
                     </Grid>
 
+                    <Label HorizontalAlignment="Center" VerticalAlignment="Top" Margin="400,325,0,0" Width="250" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="Toutes les catégories :"/>
+                    <Label HorizontalAlignment="Center" VerticalAlignment="Top" Margin="1025,325,0,0" Width="250" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="Catégories du produit :"/>
+                    <ListBox HorizontalAlignment="Center" VerticalAlignment="Top" Margin="400,350,0,0" Width="250" Height="175" ItemsSource="{Binding}" Name="lstCategorieForProduct" SelectionChanged="lstCategorieForProduct_SelectionChanged">
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem">
+                                <Setter Property="Padding" Value="5"/>
+                                <Setter Property="Margin" Value="3"/>
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+                    </ListBox>
+                    <ListBox HorizontalAlignment="Center" VerticalAlignment="Top" Margin="1025,350,0,0" Width="250" Height="175" ItemsSource="{Binding}" Name="lstCategorieInProduct" SelectionChanged="lstCategorieInProduct_SelectionChanged">
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem">
+                                <Setter Property="Padding" Value="5"/>
+                                <Setter Property="Margin" Value="3"/>
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+                    </ListBox>
+
                     <Button HorizontalAlignment="Center" VerticalAlignment="Top" Margin="350,725,0,0" Width="200" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="ajouter" Name="productAjouter" Click="productAjouter_Click"/>
                     <Button HorizontalAlignment="Center" VerticalAlignment="Top" Margin="800,725,0,0" Width="200" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="modifier" Name="productModifier" Click="productModifier_Click"/>
                     <Button HorizontalAlignment="Center" VerticalAlignment="Top" Margin="1250,725,0,0" Width="200" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="supprimer" Name="productSupprimer" Click="productSupprimer_Click"/>
@@ -165,7 +184,7 @@
 <!--user-->
             <TabItem Header="utilisateurs" FontSize="15px" Width="125px" Foreground="#ffffff">
                 <Grid>
-                    <ListBox HorizontalAlignment="Left" VerticalAlignment="Top" Margin="25,75,0,0" Width="800" Height="750" ItemsSource="{Binding}" Name="lstUser" SelectionChanged="lstUser_SelectionChanged">
+                    <ListBox HorizontalAlignment="Left" VerticalAlignment="Top" Margin="25,65,0,0" Width="800" Height="750" ItemsSource="{Binding}" Name="lstUser" SelectionChanged="lstUser_SelectionChanged">
                         <ListBox.ItemContainerStyle>
                             <Style TargetType="ListBoxItem">
                                 <Setter Property="Padding" Value="5"/>

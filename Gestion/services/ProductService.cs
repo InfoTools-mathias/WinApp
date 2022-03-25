@@ -15,7 +15,7 @@ namespace Gestion
 
         public async Task<string> Get()
         {
-            client.products.cache.Clear();
+            cache.Clear();
             dynamic products = await client.GetRequest(url);
 
             foreach (dynamic p in products)

@@ -61,8 +61,10 @@
     <Compile Include="gestion.xaml.cs">
       <DependentUpon>gestion.xaml</DependentUpon>
     </Compile>
-    <Compile Include="models\meeting.cs" />
-    <Compile Include="models\user.cs" />
+    <Compile Include="models\Categorie.cs" />
+    <Compile Include="models\Meeting.cs" />
+    <Compile Include="models\User.cs" />
+    <Compile Include="services\CategorieService.cs" />
     <Compile Include="services\MeetingService.cs" />
     <Compile Include="services\ProductService.cs" />
     <Compile Include="services\UserService.cs" />
@@ -85,7 +87,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="models\product.cs" />
+    <Compile Include="models\Product.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

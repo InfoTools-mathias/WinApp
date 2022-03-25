@@ -15,7 +15,7 @@ namespace Gestion
 
         public async Task<string> Get()
         {
-            client.meetings.cache.Clear();
+            cache.Clear();
             dynamic meetings = await client.GetRequest(url);
 
             foreach (dynamic m in meetings)
