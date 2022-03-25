@@ -18,7 +18,6 @@
         <PasswordBox HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,300,0,0" Width="250" Height="25" FontSize="15px" Foreground="#ffffff" Background="Transparent" Name="txtPW" PasswordChanged="txtPW_PasswordChanged"/>
         
         <Button HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,350,0,0" Width="150" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="Valider" Name="btnSession" Click="btnSession_Click"/>
-        <Label HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,380,0,0" FontSize="15px" Foreground="#ff0000" Content="Identifiant ou mot de passe invalide." Visibility="Hidden" Name="lblWrong"/>
-        <Label HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,380,0,0" FontSize="15px" Foreground="#ff0000" Content="Problème lors de la connexion avec la base de donnée" Visibility="Hidden" Name="lblWrong2"/>
+        <Label HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,380,0,0" FontSize="15px" Foreground="#ff0000" Content="" Name="lblWrong"/>
     </Grid>
 </Window>

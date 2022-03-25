@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -12,8 +13,6 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-using System.Net.Http;
-
 namespace Gestion
 {
     public partial class gestion : Window
@@ -21,120 +20,152 @@ namespace Gestion
         public gestion()
         {
             InitializeComponent();
-            WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
+            WindowStartupLocation = WindowStartupLocation.CenterScreen;
             refresh();
         }
-        Api api = new Api();
-        List<meeting> cMeeting = new List<meeting>();
-        List<product> cProduct = new List<product>();
-        List<user> cUser = new List<user>();
+        Api client = new Api();
+
+        #region TextBox validation
+        //Permet de ne n'accepter que les nombres
+        private void DateValidationTextBox(object sender, TextCompositionEventArgs e)
+        {
+            Regex regex = new Regex(@"^[0-9]*(?:\/[0-9]*)?$");
+            e.Handled = !regex.IsMatch(e.Text);
+        }
+        private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
+        {
+            Regex regex = new Regex(@"^[0-9]*(?:\,[0-9]*)?$");
+            e.Handled = !regex.IsMatch(e.Text);
+        }
+        private void IntValidationTextBox(object sender, TextCompositionEventArgs e)
+        {
+            Regex regex = new Regex(@"^[0-9]*(?:\[0-9]*)?$");
+            e.Handled = !regex.IsMatch(e.Text);
+        }
+
+        private void txtHourMeeting_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (txtHourMeeting.Text != "")
+            {
+                if (Convert.ToDouble(txtHourMeeting.Text) > 24)
+                {
+                    txtHourMeeting.Text = "24";
+                }
+            }
+        }
+        private void txtMinuteMeeting_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (txtMinuteMeeting.Text != "")
+            {
+                if (Convert.ToDouble(txtMinuteMeeting.Text) > 60)
+                {
+                    txtMinuteMeeting.Text = "60";
+                }
+            }
+        }
+        #endregion
 
         #region fonction refresh()
         async public void refresh()
         {
-            try
+            hide();
+            await client.Start();
+
+            // PRODUCT : réinitialisation de la liste puis remplissage
+            lstProduct.Items.Clear();
+            foreach (Product p in client.products.cache)
             {
-                hide();
-                // PRODUCT : réinitialisation de la liste -> appel API -> remplissage de la liste
-                lstProduct.Items.Clear();
-                cProduct = await api.getProducts();
-                foreach(product i in cProduct)
+                string data = "";
+                data += p.name + "\n(";
+                bool first = true;
+                foreach (Categorie c in p.categories)
                 {
-                    string data = "";
-                    data += i.name + "\n(";
-                    bool j = true;
-                    foreach(categorie y in i.categories)
+                    if (first == false)
                     {
-                        if(j == false)
-                        {
-                            data +=  ", " + y.name;
-                        }
-                        else
-                        {
-                            data += y.name;
-                            j = false;
-                        }
-                    }
-                    data += ")\nQuantité : " + i.quantity;
-                    data += "\nPrix : " + i.price;
-                    lstProduct.Items.Add(data);
-                }
-                // USER : réinitialisation de la liste -> appel API -> remplissage de la liste
-                lstUser.Items.Clear();
-                cUser = await api.getUsers();
-                foreach (user i in cUser)
-                {
-                    string data = "";
-                    data += i.name + " " + i.surname;
-                    data += "\nMail : " + i.mail;
-                    data += "\nType : " + GetStringType(i.type);
-                    lstUser.Items.Add(data);
-                }
-                // MEETING : réinitialisation des listes -> appel API -> remplissage des listes
-                lstMeeting.Items.Clear();
-                lstMeetingAllClient.Items.Clear();
-                lstMeetingAllEmployee.Items.Clear();
-                cMeeting = await api.getMeetings();
-                foreach(meeting i in cMeeting)
-                {
-                    string data = "";
-                    data += "Date : " + i.date;
-                    data += "\nLieu : " + i.adress + " " + i.zip;
-                    string dataEmployee = "";
-                    string dataClient = "";
-                    Boolean firstEmployee = true;
-                    Boolean firstClient = true;
-                    foreach (user user in i.users)
-                    {
-                        if(user.type == 0 || user.type == 1)
-                        {
-                            if(firstEmployee == true)
-                            {
-                                dataEmployee += user.name + " " + user.surname;
-                                firstEmployee = false;
-                            }
-                            else
-                            {
-                                dataEmployee += "  |  " + user.name + " " + user.surname;
-                            }
-                        }
-                        else
-                        {
-                            if (firstClient == true)
-                            {
-                                dataClient += user.name + " " + user.surname;
-                                firstClient = false;
-                            }
-                            else
-                            {
-                                dataClient += "  |  " + user.name + " " + user.surname;
-                            }
-                        }
-                    }
-                    data += "\nEmployé(e)(s) : " + dataEmployee;
-                    data += "\nClient(e)(s) : " + dataClient;
-                    lstMeeting.Items.Add(data);
-                }
-                foreach(user user in cUser)
-                {
-                    string data = "";
-                    data += user.id;
-                    data += "\n" + user.name + " " + user.surname;
-                    if(user.type == 0 || user.type == 1)
-                    {
-                        lstMeetingAllEmployee.Items.Add(data);
+                        data += ", " + c.name;
                     }
                     else
                     {
-                        lstMeetingAllClient.Items.Add(data);
+                        data += c.name;
+                        first = false;
                     }
                 }
+                data += ")\nQuantité : " + p.quantity;
+                data += "\nPrix : " + p.price;
+                lstProduct.Items.Add(data);
             }
-            catch
+
+            // USER : réinitialisation de la liste puis remplissage
+            lstUser.Items.Clear();
+            foreach (User u in client.users.cache)
             {
-                lblWrongMeeting.Visibility = Visibility.Visible;
-                lblWrongProduct.Visibility = Visibility.Visible;
-                lblWrongUser.Visibility = Visibility.Visible;
+                string data = "";
+                data += u.name + " " + u.surname;
+                data += "\nMail : " + u.mail;
+                data += "\nType : " + client.users.GetStringType(u.type);
+                lstUser.Items.Add(data);
+            }
+
+            // MEETING : réinitialisation des listes puis remplissage
+            lstMeeting.Items.Clear();
+            lstMeetingAllClient.Items.Clear();
+            lstMeetingAllEmployee.Items.Clear();
+            foreach (Meeting m in client.meetings.cache)
+            {
+                string data = "";
+                data += "Date : " + m.date;
+                data += "\nLieu : " + m.adress + " " + m.zip;
+
+                string dataEmployee = "";
+                string dataClient = "";
+                Boolean firstEmployee = true;
+                Boolean firstClient = true;
+                foreach (User u in m.users)
+                {
+                    if (u.type == 0 || u.type == 1)
+                    {
+                        if (firstEmployee == true)
+                        {
+                            dataEmployee += u.name + " " + u.surname;
+                            firstEmployee = false;
+                        }
+                        else
+                        {
+                            dataEmployee += "  |  " + u.name + " " + u.surname;
+                        }
+                    }
+                    else
+                    {
+                        if (firstClient == true)
+                        {
+                            dataClient += u.name + " " + u.surname;
+                            firstClient = false;
+                        }
+                        else
+                        {
+                            dataClient += "  |  " + u.name + " " + u.surname;
+                        }
+                    }
+                }
+                data += "\nEmployé(e)(s) : " + dataEmployee;
+                data += "\nClient(e)(s) : " + dataClient;
+                lstMeeting.Items.Add(data);
+            }
+            foreach (User u in client.users.cache)
+            {
+                string data = "";
+                data += u.id;
+                data += "\n" + u.name + " " + u.surname;
+                if (u.type == 0 || u.type == 1)
+                {
+                    employeesNotAtMeeting.Add(u);
+                    lstMeetingAllEmployee.Items.Add(data);
+                }
+                else
+                {
+                    customersNotAtMeeting.Add(u);
+                    lstMeetingAllClient.Items.Add(data);
+                }
             }
         }
         private void refresh_Click(object sender, RoutedEventArgs e)
@@ -146,396 +177,470 @@ namespace Gestion
         #region fonction hide()
         public void hide()
         {
-            lblWrongMeeting.Visibility = Visibility.Hidden;
-            lblWrongProduct.Visibility = Visibility.Hidden;
-            lblUnauthorizedProduct.Visibility = Visibility.Hidden;
-            lblWrongUser.Visibility = Visibility.Hidden;
-            lblWrongPassword.Visibility = Visibility.Hidden;
-            lblWrongPassword2.Visibility = Visibility.Hidden;
+            // Message d'erreur
+            lblWrong.Content = "";
 
+            // Meeting
+            txtIDMeeting.Text = "";
+            txtDateMeeting.Text = "";
+            txtHourMeeting.Text = "";
+            txtMinuteMeeting.Text = "";
+            txtZipMeeting.Text = "";
+            txtAdressMeeting.Text = "";
+            lstMeetingClient.Items.Clear();
+            lstMeetingEmployee.Items.Clear();
+            lstMeetingAllClient.Items.Clear();
+            lstMeetingAllEmployee.Items.Clear();
+            foreach (User u in client.users.cache)
+            {
+                string data = "";
+                data += u.id;
+                data += "\n" + u.name + " " + u.surname;
+                if (u.type == 0 || u.type == 1)
+                {
+                    lstMeetingAllEmployee.Items.Add(data);
+                }
+                else
+                {
+                    lstMeetingAllClient.Items.Add(data);
+                }
+            }
+            customersAtMeeting.Clear();
+            employeesAtMeeting.Clear();
+            customersNotAtMeeting.Clear();
+            employeesNotAtMeeting.Clear();
+
+            // Product
             txtIDProduct.Text = "";
             txtNameProduct.Text = "";
             txtPriceProduct.Text = "";
             txtQuantityProduct.Text = "";
             txtDescriptionProduct.Text = "";
-            image.Visibility = Visibility.Hidden;
             lstProduct.SelectedItem = null;
 
+            // User
             txtIDUser.Text = "";
             txtNameUser.Text = "";
             txtSurnameUser.Text = "";
             txtMailUser.Text = "";
-            txtPasswordUser.Password = "";
-            //txtNewPassword.Password = "";
-            //txtConfirmPassword.Password = "";
             cboUserType.SelectedItem = null;
+            txtPasswordUser.Password = "";
             lstUser.SelectedItem = null;
-        }
-        private void hide_Click(object sender, RoutedEventArgs e)
-        {
-            hide();
         }
         #endregion
 
         //meeting
+        List<User> customersAtMeeting = new List<User>();
+        List<User> employeesAtMeeting = new List<User>();
+        List<User> customersNotAtMeeting = new List<User>();
+        List<User> employeesNotAtMeeting = new List<User>();
         private void lstMeeting_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            try
+            if (lstMeeting.SelectedIndex >= 0)
             {
-                if (lstMeeting.SelectedIndex > -1)
+                Meeting meetingSelected = client.meetings.cache[lstMeeting.SelectedIndex];
+
+                txtIDMeeting.Text = meetingSelected.id;
+                txtDateMeeting.Text = Convert.ToString(meetingSelected.date);
+                txtHourMeeting.Text = Convert.ToString(meetingSelected.date).Split(' ')[1].Split(':')[0];
+                txtMinuteMeeting.Text = Convert.ToString(meetingSelected.date).Split(' ')[1].Split(':')[1];
+                txtZipMeeting.Text = meetingSelected.zip;
+                txtAdressMeeting.Text = meetingSelected.adress;
+
+                lstMeetingAllClient.Items.Clear();
+                lstMeetingAllEmployee.Items.Clear();
+                customersNotAtMeeting.Clear();
+                employeesNotAtMeeting.Clear();
+
+                foreach (User u in client.users.cache)
                 {
-                    meeting meetingSelected = cMeeting[lstMeeting.SelectedIndex];
-
-                    txtIDMeeting.Text = meetingSelected.id;
-                    txtDateMeeting.Text = Convert.ToString(meetingSelected.date);
-                    txtZipMeeting.Text = meetingSelected.zip;
-                    txtAdressMeeting.Text = meetingSelected.adress;
-
-                    lstMeetingClient.Items.Clear();
-                    lstMeetingEmployee.Items.Clear();
-                    foreach (user user in meetingSelected.users)
+                    foreach (User u1 in meetingSelected.users)
                     {
-                        string data = "";
-                        data += user.id;
-                        data += "\n" + user.name + " " + user.surname;
-                        if (user.type == 0 || user.type == 1)
-                        {
-                            lstMeetingEmployee.Items.Add(data);
-                        }
-                        else
-                        {
-                            lstMeetingClient.Items.Add(data);
-                        }
-                    }
-
-                    lstMeetingAllClient.Items.Clear();
-                    lstMeetingAllEmployee.Items.Clear();
-                    foreach (user user in cUser)
-                    {
-                        if (meetingSelected.users.Contains(user))
+                        if (u.id != u1.id)
                         {
                             string data = "";
-                            data += user.id;
-                            data += "\n" + user.name + " " + user.surname;
-                            if (user.type == 0 || user.type == 1)
+                            data += u.id;
+                            data += "\n" + u.name + " " + u.surname;
+                            if (u.type == 0 || u.type == 1)
                             {
+                                employeesNotAtMeeting.Add(u);
                                 lstMeetingAllEmployee.Items.Add(data);
                             }
                             else
                             {
+                                customersNotAtMeeting.Add(u);
                                 lstMeetingAllClient.Items.Add(data);
                             }
                         }
                     }
                 }
-                else
+
+                lstMeetingClient.Items.Clear();
+                lstMeetingEmployee.Items.Clear();
+                customersAtMeeting.Clear();
+                employeesAtMeeting.Clear();
+                foreach (User u in meetingSelected.users)
                 {
-                    txtIDMeeting.Text = "";
-                    txtDateMeeting.Text = "";
-                    txtZipMeeting.Text = "";
-                    txtAdressMeeting.Text = "";
-                    foreach (user user in cUser)
+                    string data = "";
+                    data += u.id;
+                    data += "\n" + u.name + " " + u.surname;
+                    if (u.type == 0 || u.type == 1)
                     {
-                        string data = "";
-                        data += user.id;
-                        data += "\n" + user.name + " " + user.surname;
-                        if (user.type == 0 || user.type == 1)
-                        {
-                            lstMeetingAllEmployee.Items.Add(data);
-                        }
-                        else
-                        {
-                            lstMeetingAllClient.Items.Add(data);
-                        }
+                        employeesAtMeeting.Add(u);
+                        lstMeetingEmployee.Items.Add(data);
                     }
-                    lstMeetingClient.Items.Clear();
-                    lstMeetingEmployee.Items.Clear();
+                    else
+                    {
+                        customersAtMeeting.Add(u);
+                        lstMeetingClient.Items.Add(data);
+                    }
                 }
             }
-            catch
+            else
             {
-                lblWrongMeeting.Visibility = Visibility.Visible;
+                hide();
             }
         }
         private async void meetingAjouter_Click(object sender, RoutedEventArgs e)
         {
-            try
+            if (txtDateMeeting.Text != "" || txtHourMeeting.Text != "" || txtMinuteMeeting.Text != "" || txtZipMeeting.Text != "" || txtAdressMeeting.Text != "" || customersAtMeeting.Count > 0)
             {
-                //if ()
-                //{
-                //    meeting tmpMeeting = new meeting();
-                //    await api.putMeeting(tmpMeeting);
-                //    refresh();
-                //}
-                //else
-                //{
-                //    lblWrongMeeting.Visibility = Visibility.Visible;
-                //}
+                List<User> users = new List<User>();
+                foreach (User u in customersAtMeeting)
+                {
+                    users.Add(u);
+                }
+                foreach (User u in employeesAtMeeting)
+                {
+                    users.Add(u);
+                }
+
+                Meeting tmpMeeting = new Meeting(
+                    "",
+                    Convert.ToDateTime(txtDateMeeting.Text + " " + txtHourMeeting.Text + ":" + txtMinuteMeeting.Text + ":00"),
+                    txtZipMeeting.Text,
+                    txtAdressMeeting.Text,
+                    users
+                );
+                await client.meetings.Post(tmpMeeting);
+                refresh();
             }
-            catch
+            else
             {
-                lblWrongMeeting.Visibility = Visibility.Visible;
+                lblWrong.Content = "Tous les champs ne sont pas remplis";
             }
         }
         private async void meetingModifier_Click(object sender, RoutedEventArgs e)
         {
-            try
+            if (txtIDMeeting.Text != "" || txtDateMeeting.Text != "" || txtHourMeeting.Text != "" || txtMinuteMeeting.Text != "" || txtZipMeeting.Text != "" || txtAdressMeeting.Text != "" || customersAtMeeting.Count > 0)
             {
-                //if ()
-                //{
-                //    meeting tmpMeeting = new meeting();
-                //    await api.putMeeting(tmpMeeting);
-                //    refresh();
-                //}
-                //else
-                //{
-                //    lblWrongMeeting.Visibility = Visibility.Visible;
-                //}
+                List<User> users = new List<User>();
+                foreach (User u in customersAtMeeting)
+                {
+                    users.Add(u);
+                }
+                foreach (User u in employeesAtMeeting)
+                {
+                    users.Add(u);
+                }
+
+                Meeting tmpMeeting = new Meeting(
+                    txtIDMeeting.Text,
+                    Convert.ToDateTime(txtDateMeeting.Text + " " + txtHourMeeting.Text + ":" + txtMinuteMeeting.Text + ":00"),
+                    txtZipMeeting.Text,
+                    txtAdressMeeting.Text,
+                    users
+                );
+                await client.meetings.Put(tmpMeeting);
+                refresh();
             }
-            catch
+            else
             {
-                lblWrongMeeting.Visibility = Visibility.Visible;
+                lblWrong.Content = "Tous les champs ne sont pas remplis";
             }
         }
         private async void meetingSupprimer_Click(object sender, RoutedEventArgs e)
         {
-            try
+            await client.meetings.Delete(txtIDMeeting.Text);
+            refresh();
+        }
+
+        #region select user
+        private void lstMeetingAllClient_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (lstMeetingAllClient.SelectedIndex >= 0)
             {
-                await api.deleteMeeting(txtIDMeeting.Text);
-                refresh();
-            }
-            catch
-            {
-                lblWrongMeeting.Visibility = Visibility.Visible;
+                customersAtMeeting.Add(customersNotAtMeeting[lstMeetingAllClient.SelectedIndex]);
+                customersNotAtMeeting.Remove(customersNotAtMeeting[lstMeetingAllClient.SelectedIndex]);
+                refreshList();
             }
         }
+        private void lstMeetingClient_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (lstMeetingClient.SelectedIndex >= 0)
+            {
+                customersNotAtMeeting.Add(customersAtMeeting[lstMeetingClient.SelectedIndex]);
+                customersAtMeeting.Remove(customersAtMeeting[lstMeetingClient.SelectedIndex]);
+                refreshList();
+            }
+        }
+
+        private void lstMeetingAllEmployee_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (lstMeetingAllEmployee.SelectedIndex >= 0)
+            {
+                employeesAtMeeting.Add(employeesNotAtMeeting[lstMeetingAllEmployee.SelectedIndex]);
+                employeesNotAtMeeting.Remove(employeesNotAtMeeting[lstMeetingAllEmployee.SelectedIndex]);
+                refreshList();
+            }
+        }
+        private void lstMeetingEmployee_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if(lstMeetingEmployee.SelectedIndex >= 0)
+            {
+                employeesNotAtMeeting.Add(employeesAtMeeting[lstMeetingEmployee.SelectedIndex]);
+                employeesAtMeeting.Remove(employeesAtMeeting[lstMeetingEmployee.SelectedIndex]);
+                refreshList();
+            }
+        }
+        private void refreshList()
+        {
+            lstMeetingAllClient.Items.Clear();
+            foreach (User u in customersNotAtMeeting)
+            {
+                string data = "";
+                data += u.id;
+                data += "\n" + u.name + " " + u.surname;
+                lstMeetingAllClient.Items.Add(data);
+            }
+            lstMeetingClient.Items.Clear();
+            foreach (User u in customersAtMeeting)
+            {
+                string data = "";
+                data += u.id;
+                data += "\n" + u.name + " " + u.surname;
+                lstMeetingClient.Items.Add(data);
+            }
+            lstMeetingAllEmployee.Items.Clear();
+            foreach (User u in employeesNotAtMeeting)
+            {
+                string data = "";
+                data += u.id;
+                data += "\n" + u.name + " " + u.surname;
+                lstMeetingAllEmployee.Items.Add(data);
+            }
+            lstMeetingEmployee.Items.Clear();
+            foreach (User u in employeesAtMeeting)
+            {
+                string data = "";
+                data += u.id;
+                data += "\n" + u.name + " " + u.surname;
+                lstMeetingEmployee.Items.Add(data);
+            }
+        }
+        #endregion
 
         //product
         private void lstProduct_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            try
+            if (lstProduct.SelectedIndex >= 0)
             {
-                if (lstProduct.SelectedIndex > -1)
-                {
-                    product productSelected = cProduct[lstProduct.SelectedIndex];
+                Product productSelected = client.products.cache[lstProduct.SelectedIndex];
 
-                    txtIDProduct.Text = productSelected.id;
-                    txtNameProduct.Text = productSelected.name;
-                    txtPriceProduct.Text = Convert.ToString(productSelected.price);
-                    txtQuantityProduct.Text = Convert.ToString(productSelected.quantity);
-                    txtDescriptionProduct.Text = productSelected.description;
-                }
-                else
-                {
-                    txtIDProduct.Text = "";
-                    txtNameProduct.Text = "";
-                    txtPriceProduct.Text = "";
-                    txtQuantityProduct.Text = "";
-                    txtDescriptionProduct.Text = "";
-                }
+                txtIDProduct.Text = productSelected.id;
+                txtNameProduct.Text = productSelected.name;
+                txtPriceProduct.Text = Convert.ToString(productSelected.price);
+                txtQuantityProduct.Text = Convert.ToString(productSelected.quantity);
+                txtDescriptionProduct.Text = productSelected.description;
             }
-            catch
+            else
             {
-                lblWrongProduct.Visibility = Visibility.Visible;
+                txtIDProduct.Text = "";
+                txtNameProduct.Text = "";
+                txtPriceProduct.Text = "";
+                txtQuantityProduct.Text = "";
+                txtDescriptionProduct.Text = "";
             }
         }
         private async void productAjouter_Click(object sender, RoutedEventArgs e)
         {
-            try
+            if (txtNameProduct.Text != "" || txtPriceProduct.Text != "" || txtQuantityProduct.Text != "" || txtDescriptionProduct.Text != "")
             {
-                if (txtNameProduct.Text != "" || txtPriceProduct.Text != "" || txtQuantityProduct.Text != "" || txtDescriptionProduct.Text != "")
-                {
-                    product tmpProduct = new product("", txtNameProduct.Text, Convert.ToDouble(txtPriceProduct.Text), Convert.ToInt32(txtQuantityProduct.Text), txtDescriptionProduct.Text, null);
-                    await api.postProduct(tmpProduct);
-                    refresh();
-                }
-                else
-                {
-                    lblWrongProduct.Visibility = Visibility.Visible;
-                }
+                Product tmpProduct = new Product(
+                    "",
+                    txtNameProduct.Text,
+                    Convert.ToDouble(txtPriceProduct.Text),
+                    Convert.ToInt32(txtQuantityProduct.Text),
+                    txtDescriptionProduct.Text,
+                    null
+                );
+                await client.products.Post(tmpProduct);
+                refresh();
             }
-            catch
+            else
             {
-                lblWrongProduct.Visibility = Visibility.Visible;
+                lblWrong.Content = "Tous les champs ne sont pas remplis";
             }
         }
         private async void productModifier_Click(object sender, RoutedEventArgs e)
         {
-            try
+            if (txtIDProduct.Text != "" || txtNameProduct.Text != "" || txtPriceProduct.Text != "" || txtQuantityProduct.Text != "" || txtDescriptionProduct.Text != "")
             {
-                if (txtIDProduct.Text != "" || txtNameProduct.Text != "" || txtPriceProduct.Text != "" || txtQuantityProduct.Text != "" || txtDescriptionProduct.Text != "")
-                {
-                    product tmpProduct = new product(txtIDProduct.Text, txtNameProduct.Text, Convert.ToDouble(txtPriceProduct.Text), Convert.ToInt32(txtQuantityProduct.Text), txtDescriptionProduct.Text, null);
-                    await api.putProduct(tmpProduct);
-                    refresh();
-                }
-                else
-                {
-                    lblWrongProduct.Visibility = Visibility.Visible;
-                }
+                Product tmpProduct = new Product(
+                    txtIDProduct.Text,
+                    txtNameProduct.Text,
+                    Convert.ToDouble(txtPriceProduct.Text),
+                    Convert.ToInt32(txtQuantityProduct.Text),
+                    txtDescriptionProduct.Text,
+                    null
+                );
+                await client.products.Put(tmpProduct);
+                refresh();
             }
-            catch
+            else
             {
-                lblWrongProduct.Visibility = Visibility.Visible;
+                lblWrong.Content = "Tous les champs ne sont pas remplis";
             }
         }
         private async void productSupprimer_Click(object sender, RoutedEventArgs e)
         {
-            try
-            {
-                await api.deleteProduct(txtIDProduct.Text);
-                refresh();
-            }
-            catch
-            {
-                lblWrongProduct.Visibility = Visibility.Visible;
-            }
+            await client.products.Delete(txtIDProduct.Text);
+            refresh();
         }
 
         //user
+        string AccountToDisplay = "prospect";
         private void lstUser_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            try
+            if (lstUser.SelectedIndex >= 0)
             {
-                if (lstUser.SelectedIndex > -1)
-                {
-                    user selectedUser = cUser[lstUser.SelectedIndex];
+                User selectedUser = client.users.cache[lstUser.SelectedIndex];
 
-                    txtIDUser.Text = selectedUser.id;
-                    txtNameUser.Text = selectedUser.name;
-                    txtSurnameUser.Text = selectedUser.surname;
-                    txtMailUser.Text = selectedUser.mail;
-                    cboUserType.Text = GetStringType(selectedUser.type);
-                    txtPasswordUser.Password = selectedUser.password;
-                }
-                else
-                {
-                    txtIDUser.Text = "";
-                    txtNameUser.Text = "";
-                    txtSurnameUser.Text = "";
-                    txtMailUser.Text = "";
-                    cboUserType.SelectedValue = null;
-                    txtPasswordUser.Password = "";
-                }
+                txtIDUser.Text = selectedUser.id;
+                txtNameUser.Text = selectedUser.name;
+                txtSurnameUser.Text = selectedUser.surname;
+                txtMailUser.Text = selectedUser.mail;
+                cboUserType.Text = client.users.GetStringType(selectedUser.type);
+                txtPasswordUser.Password = selectedUser.password;
             }
-            catch
+            else
             {
-                lblWrongUser.Visibility = Visibility.Visible;
+                txtIDUser.Text = "";
+                txtNameUser.Text = "";
+                txtSurnameUser.Text = "";
+                txtMailUser.Text = "";
+                cboUserType.SelectedValue = null;
+                txtPasswordUser.Password = "";
             }
         }
         private async void userAjouter_Click(object sender, RoutedEventArgs e)
         {
-            try
+            if (txtNameUser.Text != "" || txtSurnameUser.Text != "" || txtMailUser.Text != "" || cboUserType.Text != null)
             {
-                if (txtNameUser.Text != "" || txtSurnameUser.Text != "" || txtMailUser.Text != "" || cboUserType.Text != null)
+                string password = txtPasswordUser.Password;
+                if (txtPasswordUser.Password == "")
                 {
-                    user tmpUser = new user("", txtNameUser.Text, txtSurnameUser.Text, txtMailUser.Text, GetIntType(cboUserType.Text), txtPasswordUser.Password);
-                    await api.postUser(tmpUser);
-                    refresh();
+                    password = client.users.cache[lstUser.SelectedIndex].password;
                 }
-                else
-                {
-                    lblWrongUser.Visibility = Visibility.Visible;
-                }
+                User tmpUser = new User(
+                    "",
+                    txtNameUser.Text,
+                    txtSurnameUser.Text,
+                    txtMailUser.Text,
+                    client.users.GetIntType(cboUserType.Text),
+                    password
+                );
+                await client.users.Post(tmpUser);
+                refresh();
             }
-            catch
+            else
             {
-                lblWrongUser.Visibility = Visibility.Visible;
+                lblWrong.Content = "Tous les champs ne sont pas remplis";
             }
         }
         private async void userModifier_Click(object sender, RoutedEventArgs e)
         {
-            try
+            if (txtIDUser.Text != "" || txtNameUser.Text != "" || txtSurnameUser.Text != "" || txtMailUser.Text != "" || cboUserType.SelectedValue != null)
             {
-                if (txtIDUser.Text != "" || txtNameUser.Text != "" || txtSurnameUser.Text != "" || txtMailUser.Text != "" || cboUserType.SelectedValue != null)
+                string password = txtPasswordUser.Password;
+                if (txtPasswordUser.Password == "")
                 {
-                    user tmpUser = new user(txtIDUser.Text, txtNameUser.Text, txtSurnameUser.Text, txtMailUser.Text, GetIntType(cboUserType.Text), txtPasswordUser.Password);
-                    await api.putUser(tmpUser);
-                    refresh();
+                    password = client.users.cache[lstUser.SelectedIndex].password;
                 }
-                else
-                {
-                    lblWrongUser.Visibility = Visibility.Visible;
-                }
+                User tmpUser = new User(
+                    txtIDUser.Text,
+                    txtNameUser.Text,
+                    txtSurnameUser.Text,
+                    txtMailUser.Text,
+                    client.users.GetIntType(cboUserType.Text),
+                    password
+                );
+                await client.users.Put(tmpUser);
+                refresh();
             }
-            catch
+            else
             {
-                lblWrongUser.Visibility = Visibility.Visible;
+                lblWrong.Content = "Tous les champs ne sont pas remplis";
             }
         }
         private async void userSupprimer_Click(object sender, RoutedEventArgs e)
         {
-            try
-            {
-                await api.deleteUser(txtIDUser.Text);
-                refresh();
-            }
-            catch
-            {
-                lblWrongUser.Visibility = Visibility.Visible;
-            }
+            await client.users.Delete(txtIDUser.Text);
+            refresh();
         }
         private void cboUserType_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if ((e.AddedItems[0] as ComboBoxItem).Content as string == "administrateur" || (e.AddedItems[0] as ComboBoxItem).Content as string == "employé")
+            if (cboUserType.SelectedValue != null)
             {
-                txtPasswordUser.IsEnabled = true;
-            }
-            else
-            {
-                txtPasswordUser.IsEnabled = false;
-                txtPasswordUser.Password = "";
+                if ((e.AddedItems[0] as ComboBoxItem).Content as string == "administrateur" || (e.AddedItems[0] as ComboBoxItem).Content as string == "employé")
+                {
+                    txtPasswordUser.IsEnabled = true;
+                }
+                else
+                {
+                    txtPasswordUser.IsEnabled = false;
+                    txtPasswordUser.Password = "";
+                }
             }
         }
+        #region read user
+        private void cboUserFilter_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (cboUserFilter.SelectedValue != null)
+            {
+                switch ((e.AddedItems[0] as ComboBoxItem).Content as string)
+                {
+                    case "Tous les type de compte":
+                        AccountToDisplay = "all";
+                        break;
+                    case "Administrateur":
+                        AccountToDisplay = "Administrateur";
+                        break;
+                    case "Employé":
+                        AccountToDisplay = "Employé";
+                        break;
+                    case "Client":
+                        AccountToDisplay = "Client";
+                        break;
+                    case "Prospect":
+                        AccountToDisplay = "prospect";
+                        break;
+                    default:
+                        AccountToDisplay = "prospect";
+                        break;
+                }
+            }
+        }
+        #endregion
+
         //disconnect
         private void disconnect_Click(object sender, RoutedEventArgs e)
         {
-            try
-            {
-                hide();
-                api.killtoken();
-                MainWindow a = new MainWindow();
-                a.Show();
-                this.Close();
-            }
-            catch
-            {
-                lblWrongProduct.Visibility = Visibility.Visible;
-                lblWrongUser.Visibility = Visibility.Visible;
-            }
-        }
-
-        private int GetIntType(string name)
-        {
-            switch (name)
-            {
-                case "administrateur":
-                    return 0;
-                case "employé":
-                    return 1;
-                case "client":
-                    return 2;
-                case "prospect":
-                    return 3;
-                default:
-                    return 3;
-            }
-        }
-        private string GetStringType(int id)
-        {
-            switch (id)
-            {
-                case 0:
-                    return "administrateur";
-                case 1:
-                    return "employé";
-                case 2:
-                    return "client";
-                case 3:
-                    return "prospect";
-                default:
-                    return "prospect";
-            }
+            hide();
+            client.killtoken();
+            MainWindow a = new MainWindow();
+            a.Show();
+            this.Close();
         }
     }
 }

@@ -1,4 +1,3 @@
-E:\cours\projet\InfoTools\Gestion\Gestion\obj\Debug\Gestion.csprojAssemblyReference.cache
 E:\cours\projet\InfoTools\Gestion\Gestion\obj\Debug\gestion.g.cs
 E:\cours\projet\InfoTools\Gestion\Gestion\obj\Debug\MainWindow.g.cs
 E:\cours\projet\InfoTools\Gestion\Gestion\obj\Debug\App.g.cs
@@ -15,7 +14,6 @@ E:\cours\projet\InfoTools\Gestion\Gestion\obj\Debug\Gestion.g.resources
 E:\cours\projet\InfoTools\Gestion\Gestion\obj\Debug\Gestion.Properties.Resources.resources
 E:\cours\projet\InfoTools\Gestion\Gestion\obj\Debug\Gestion.csproj.GenerateResource.cache
 E:\cours\projet\InfoTools\Gestion\Gestion\obj\Debug\Gestion.csproj.CoreCompileInputs.cache
-E:\cours\projet\InfoTools\Gestion\Gestion\obj\Debug\Gestion.csproj.CopyComplete
 E:\cours\projet\InfoTools\Gestion\Gestion\obj\Debug\Gestion.exe
 E:\cours\projet\InfoTools\Gestion\Gestion\obj\Debug\Gestion.pdb
 F:\cours\projet\InfoTools\Gestion\Gestion\bin\Debug\Gestion.exe.config
@@ -38,3 +36,6 @@ F:\cours\projet\InfoTools\Gestion\Gestion\obj\Debug\Gestion.csproj.CoreCompileIn
 F:\cours\projet\InfoTools\Gestion\Gestion\obj\Debug\Gestion.csproj.CopyComplete
 F:\cours\projet\InfoTools\Gestion\Gestion\obj\Debug\Gestion.exe
 F:\cours\projet\InfoTools\Gestion\Gestion\obj\Debug\Gestion.pdb
+E:\cours\projet\InfoTools\Gestion\Gestion\obj\Debug\Gestion.csproj.AssemblyReference.cache
+E:\cours\projet\InfoTools\Gestion\Gestion\obj\Debug\Gestion.csproj.SuggestedBindingRedirects.cache
+E:\cours\projet\InfoTools\Gestion\Gestion\obj\Debug\Gestion.csproj.CopyComplete

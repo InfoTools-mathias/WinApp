@@ -32,25 +32,23 @@ namespace Gestion
         #region fonction clear()
         public void clear()
         {
-            lblWrong.Visibility = Visibility.Hidden;
-            lblWrong2.Visibility = Visibility.Hidden;
             txtID.Text = "";
             txtPW.Password = "";
+            lblWrong.Content = "";
         }
         private void txtID_TextChanged(object sender, TextChangedEventArgs e)
         {
-            lblWrong.Visibility = Visibility.Hidden;
+            lblWrong.Content = "";
         }
         private void txtPW_PasswordChanged(object sender, RoutedEventArgs e)
         {
-            lblWrong.Visibility = Visibility.Hidden;
+            lblWrong.Content = "";
         }
         #endregion
 
         async void btnSession_Click(object sender, RoutedEventArgs e)
         {
-            auth tmpAuth = new auth(txtID.Text, txtPW.Password);
-            string response = await api.auth(tmpAuth);
+            string response = await api.auth(new User("", "", "", txtID.Text, 3, txtPW.Password));
             if (response == "OK")
             {
                 gestion a = new gestion();
@@ -58,14 +56,14 @@ namespace Gestion
                 clear();
                 this.Close();
             }
-            else if(response == "error")
-            {
-                lblWrong2.Visibility = Visibility.Visible;
-            }
-            else
+            else if (response == "Unauthorized")
             {
                 txtPW.Password = "";
-                lblWrong.Visibility = Visibility.Visible;
+                lblWrong.Content = "Identifiant ou mot de passe invalide.";
+            }
+            else if(response == "error")
+            {
+                lblWrong.Content = "Problème lors de la connexion avec la base de donnée.";
             }
         }
     }
