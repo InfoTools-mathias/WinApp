@@ -152,32 +152,56 @@
                     <Label HorizontalAlignment="Center" VerticalAlignment="Top" Margin="1025,25,0,0" Width="250" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="Description :"/>
                     <TextBox HorizontalAlignment="Center" VerticalAlignment="Top" Margin="1123,50,0,0" Width="350" Height="250" FontSize="15px" Foreground="#ffffff" Background="Transparent" TextWrapping="Wrap" Name="txtDescriptionProduct"/>
 
-                    <Grid x:Name="image" Margin="872,355,60,171" Background="#ffffff" Visibility="Hidden">
+                    <!--<Grid x:Name="image" Margin="872,355,60,171" Background="#ffffff">
                         <Label HorizontalAlignment="Center" VerticalAlignment="center" Content="IMAGE"/>
+                    </Grid>-->
+
+                    <Grid x:Name="gridListsCategorie">
+                        <Label HorizontalAlignment="Center" VerticalAlignment="Top" Margin="400,325,0,0" Width="250" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="Toutes les catégories :"/>
+                        <ListBox HorizontalAlignment="Center" VerticalAlignment="Top" Margin="400,350,0,0" Width="250" Height="175" ItemsSource="{Binding}" Name="lstCategorieForProduct" SelectionChanged="lstCategorieForProduct_SelectionChanged">
+                            <ListBox.ItemContainerStyle>
+                                <Style TargetType="ListBoxItem">
+                                    <Setter Property="Padding" Value="5"/>
+                                    <Setter Property="Margin" Value="3"/>
+                                </Style>
+                            </ListBox.ItemContainerStyle>
+                        </ListBox>
+                        <Label HorizontalAlignment="Center" VerticalAlignment="Top" Margin="1025,325,0,0" Width="250" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="Catégories du produit :"/>
+                        <ListBox HorizontalAlignment="Center" VerticalAlignment="Top" Margin="1025,350,0,0" Width="250" Height="175" ItemsSource="{Binding}" Name="lstCategorieInProduct" SelectionChanged="lstCategorieInProduct_SelectionChanged">
+                            <ListBox.ItemContainerStyle>
+                                <Style TargetType="ListBoxItem">
+                                    <Setter Property="Padding" Value="5"/>
+                                    <Setter Property="Margin" Value="3"/>
+                                </Style>
+                            </ListBox.ItemContainerStyle>
+                        </ListBox>
+                        <Button HorizontalAlignment="Center" VerticalAlignment="Top" Margin="1450,420,0,0" Width="100" Height="50" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="modifié les&#10;catégories" Name="goToCRUDCategorie" Click="goToCRUDCategorie_Click"/>
+
+                        <Button HorizontalAlignment="Center" VerticalAlignment="Top" Margin="350,725,0,0" Width="200" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="ajouter" Name="productAjouter" Click="productAjouter_Click"/>
+                        <Button HorizontalAlignment="Center" VerticalAlignment="Top" Margin="800,725,0,0" Width="200" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="modifier" Name="productModifier" Click="productModifier_Click"/>
+                        <Button HorizontalAlignment="Center" VerticalAlignment="Top" Margin="1250,725,0,0" Width="200" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="supprimer" Name="productSupprimer" Click="productSupprimer_Click"/>
                     </Grid>
+                    <Grid x:Name="gridCRUDCategorie" Visibility="Hidden">
+                        <Label HorizontalAlignment="Center" VerticalAlignment="Top" Margin="400,325,0,0" Width="250" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="Toutes les catégories :"/>
+                        <ListBox HorizontalAlignment="Center" VerticalAlignment="Top" Margin="400,350,0,0" Width="250" Height="175" ItemsSource="{Binding}" Name="lstCategorie" SelectionChanged="lstCategorie_SelectionChanged">
+                            <ListBox.ItemContainerStyle>
+                                <Style TargetType="ListBoxItem">
+                                    <Setter Property="Padding" Value="5"/>
+                                    <Setter Property="Margin" Value="3"/>
+                                </Style>
+                            </ListBox.ItemContainerStyle>
+                        </ListBox>
 
-                    <Label HorizontalAlignment="Center" VerticalAlignment="Top" Margin="400,325,0,0" Width="250" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="Toutes les catégories :"/>
-                    <Label HorizontalAlignment="Center" VerticalAlignment="Top" Margin="1025,325,0,0" Width="250" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="Catégories du produit :"/>
-                    <ListBox HorizontalAlignment="Center" VerticalAlignment="Top" Margin="400,350,0,0" Width="250" Height="175" ItemsSource="{Binding}" Name="lstCategorieForProduct" SelectionChanged="lstCategorieForProduct_SelectionChanged">
-                        <ListBox.ItemContainerStyle>
-                            <Style TargetType="ListBoxItem">
-                                <Setter Property="Padding" Value="5"/>
-                                <Setter Property="Margin" Value="3"/>
-                            </Style>
-                        </ListBox.ItemContainerStyle>
-                    </ListBox>
-                    <ListBox HorizontalAlignment="Center" VerticalAlignment="Top" Margin="1025,350,0,0" Width="250" Height="175" ItemsSource="{Binding}" Name="lstCategorieInProduct" SelectionChanged="lstCategorieInProduct_SelectionChanged">
-                        <ListBox.ItemContainerStyle>
-                            <Style TargetType="ListBoxItem">
-                                <Setter Property="Padding" Value="5"/>
-                                <Setter Property="Margin" Value="3"/>
-                            </Style>
-                        </ListBox.ItemContainerStyle>
-                    </ListBox>
+                        <Button HorizontalAlignment="Center" VerticalAlignment="Top" Margin="1450,420,0,0" Width="100" Height="50" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="retour" Name="goToCRUDProduit" Click="goToCRUDProduit_Click"/>
 
-                    <Button HorizontalAlignment="Center" VerticalAlignment="Top" Margin="350,725,0,0" Width="200" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="ajouter" Name="productAjouter" Click="productAjouter_Click"/>
-                    <Button HorizontalAlignment="Center" VerticalAlignment="Top" Margin="800,725,0,0" Width="200" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="modifier" Name="productModifier" Click="productModifier_Click"/>
-                    <Button HorizontalAlignment="Center" VerticalAlignment="Top" Margin="1250,725,0,0" Width="200" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="supprimer" Name="productSupprimer" Click="productSupprimer_Click"/>
+                        <Label HorizontalAlignment="Center" VerticalAlignment="Top" Margin="1025,325,0,0" Width="200" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="Nom de la catégorie :"/>
+                        <TextBox HorizontalAlignment="Center" VerticalAlignment="Top" Margin="1025,350,0,0" Width="200" Height="25" FontSize="15px" Foreground="#ffffff" Background="Transparent" Name="txtNameCategorie"/>
+                        <TextBox HorizontalAlignment="Center" VerticalAlignment="Top" Margin="1025,350,0,0" Width="200" Height="25" FontSize="15px" Foreground="#ffffff" Background="Transparent" Visibility="Hidden" Name="txtIdCategorie"/>
+                        
+                        <Button HorizontalAlignment="Center" VerticalAlignment="Top" Margin="1025,400,0,0" Width="200" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="ajouter" Name="categorieAjouter" Click="categorieAjouter_Click"/>
+                        <Button HorizontalAlignment="Center" VerticalAlignment="Top" Margin="1025,450,0,0" Width="200" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="modifier" Name="categorieModifier" Click="categorieModifier_Click"/>
+                        <Button HorizontalAlignment="Center" VerticalAlignment="Top" Margin="1025,500,0,0" Width="200" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="supprimer" Name="categorieSupprimer" Click="categorieSupprimer_Click"/>
+                    </Grid>
                     <Button HorizontalAlignment="Center" VerticalAlignment="Top" Margin="800,775,0,0" Width="200" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="rafraîchir" Name="productRefresh" Click="refresh_Click"/>
                 </Grid>
             </TabItem>

@@ -24,10 +24,8 @@ namespace Gestion
             refresh();
         }
         Api client = new Api();
-        List<User> users = new List<User>();
 
-        #region TextBox validation
-        //Permet de ne n'accepter que les nombres
+        #region TextBox validation (Regex)
         private void DateValidationTextBox(object sender, TextCompositionEventArgs e)
         {
             Regex regex = new Regex(@"^[0-9]*(?:\/[0-9]*)?$");
@@ -151,6 +149,13 @@ namespace Gestion
                 data += "\nClient(e)(s) : " + dataClient;
                 lstMeeting.Items.Add(data);
             }
+
+            // Categorie
+            lstCategorie.Items.Clear();
+            foreach (Categorie c in client.categories.cache)
+            {
+                lstCategorie.Items.Add(c.name);
+            }
         }
         private void refresh_Click(object sender, RoutedEventArgs e)
         {
@@ -207,6 +212,8 @@ namespace Gestion
             cboUserFilter.Text = "Tous les type de compte";
 
             // Categorie
+            txtNameCategorie.Text = "";
+
             lstCategorieInProduct.Items.Clear();
             lstCategorieForProduct.Items.Clear();
             categoriesForProduct.Clear();
@@ -228,10 +235,6 @@ namespace Gestion
         #endregion
 
         //meeting
-        List<User> customersAtMeeting = new List<User>();
-        List<User> employeesAtMeeting = new List<User>();
-        List<User> customersNotAtMeeting = new List<User>();
-        List<User> employeesNotAtMeeting = new List<User>();
         private void lstMeeting_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (lstMeeting.SelectedIndex >= 0)
@@ -362,6 +365,10 @@ namespace Gestion
             refresh();
         }
         #region select user
+        List<User> customersAtMeeting = new List<User>();
+        List<User> employeesAtMeeting = new List<User>();
+        List<User> customersNotAtMeeting = new List<User>();
+        List<User> employeesNotAtMeeting = new List<User>();
         private void lstCustomerNotAtMeeting_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (lstCustomerNotAtMeeting.SelectedIndex >= 0)
@@ -380,7 +387,6 @@ namespace Gestion
                 refreshList();
             }
         }
-
         private void lstEmployeeNotAtMeeting_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (lstEmployeeNotAtMeeting.SelectedIndex >= 0)
@@ -437,8 +443,6 @@ namespace Gestion
         #endregion
 
         //product
-        List<Categorie> categoriesForProduct = new List<Categorie>();
-        List<Categorie> categoriesInProduct = new List<Categorie>();
         private void lstProduct_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (lstProduct.SelectedIndex >= 0)
@@ -524,6 +528,8 @@ namespace Gestion
             refresh();
         }
         #region select categorie
+        List<Categorie> categoriesForProduct = new List<Categorie>();
+        List<Categorie> categoriesInProduct = new List<Categorie>();
         private void lstCategorieForProduct_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (lstCategorieForProduct.SelectedIndex >= 0)
@@ -600,7 +606,7 @@ namespace Gestion
             }
             else
             {
-                lblWrong.Content = "Tous les champs ne sont pas remplis";
+                lblWrong.Content = "Tous les champs ne sont pas remplis.";
             }
         }
         private async void userModifier_Click(object sender, RoutedEventArgs e)
@@ -636,6 +642,7 @@ namespace Gestion
             refresh();
         }
         #region user settings
+        List<User> users = new List<User>();
         private void cboUserType_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (cboUserType.SelectedValue != null)
@@ -679,6 +686,74 @@ namespace Gestion
                     }
                 }
             }
+        }
+        #endregion
+
+        //categorie
+        private void lstCategorie_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (lstCategorie.SelectedIndex >= 0)
+            {
+                Categorie selectedCategorie = client.categories.cache[lstCategorie.SelectedIndex];
+
+                txtIdCategorie.Text = selectedCategorie.id;
+                txtNameCategorie.Text = selectedCategorie.name;
+            }
+            else
+            {
+                hide();
+            }
+        }
+        private async void categorieAjouter_Click(object sender, RoutedEventArgs e)
+        {
+            if (txtNameCategorie.Text != null)
+            {
+                Categorie tmpCategorie = new Categorie(
+                    "",
+                    txtNameCategorie.Text
+                );
+                await client.categories.Post(tmpCategorie);
+                refresh();
+            }
+            else
+            {
+                lblWrong.Content = "Une catégorie à besoin d'un nom.";
+            }
+        }
+        private async void categorieModifier_Click(object sender, RoutedEventArgs e)
+        {
+            if (txtIdCategorie.Text != null || txtNameCategorie.Text != null)
+            {
+                Categorie tmpCategorie = new Categorie(
+                    "",
+                    txtNameCategorie.Text
+                );
+                await client.categories.Post(tmpCategorie);
+                refresh();
+            }
+            else
+            {
+                lblWrong.Content = "Il faut séléctionner un objet et lui donner un nom.";
+            }
+        }
+        private async void categorieSupprimer_Click(object sender, RoutedEventArgs e)
+        {
+            if (txtIdCategorie.Text != null)
+            {
+                await client.categories.Delete(txtIdCategorie.Text);
+                refresh();
+            }
+        }
+        #region change grid
+        private void goToCRUDCategorie_Click(object sender, RoutedEventArgs e)
+        {
+            gridListsCategorie.Visibility = Visibility.Hidden;
+            gridCRUDCategorie.Visibility = Visibility.Visible;
+        }
+        private void goToCRUDProduit_Click(object sender, RoutedEventArgs e)
+        {
+            gridCRUDCategorie.Visibility = Visibility.Hidden;
+            gridListsCategorie.Visibility = Visibility.Visible;
         }
         #endregion
 
