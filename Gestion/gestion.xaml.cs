@@ -99,11 +99,19 @@ namespace Gestion
             lstUser.Items.Clear();
             foreach (User u in client.users.cache)
             {
-                string data = "";
-                data += u.name + " " + u.surname;
-                data += "\nMail : " + u.mail;
-                data += "\nType : " + client.users.GetStringType(u.type);
-                lstUser.Items.Add(data);
+                if (u.type == 3)
+                {
+                    string data = "";
+                    data += u.name + " " + u.surname;
+                    data += "\nMail : " + u.mail;
+                    data += "\nType : " + client.users.GetStringType(u.type);
+                    lstUser.Items.Add(data);
+                }
+                else
+                {
+                    string data = "";
+                    lstUser.Items.Add(data);
+                }
             }
 
             // MEETING : réinitialisation des listes puis remplissage
@@ -217,6 +225,7 @@ namespace Gestion
             txtQuantityProduct.Text = "";
             txtDescriptionProduct.Text = "";
             lstProduct.SelectedItem = null;
+            cboUserFilter.Text = "Prospect";
 
             // User
             txtIDUser.Text = "";
@@ -509,7 +518,6 @@ namespace Gestion
         }
 
         //user
-        string AccountToDisplay = "prospect";
         private void lstUser_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (lstUser.SelectedIndex >= 0)
@@ -611,22 +619,110 @@ namespace Gestion
                 switch ((e.AddedItems[0] as ComboBoxItem).Content as string)
                 {
                     case "Tous les type de compte":
-                        AccountToDisplay = "all";
+                        lstUser.Items.Clear();
+                        foreach (User u in client.users.cache)
+                        {
+                            string data = "";
+                            data += u.name + " " + u.surname;
+                            data += "\nMail : " + u.mail;
+                            data += "\nType : " + client.users.GetStringType(u.type);
+                            lstUser.Items.Add(data);
+                        }
                         break;
                     case "Administrateur":
-                        AccountToDisplay = "Administrateur";
+                        lstUser.Items.Clear();
+                        foreach (User u in client.users.cache)
+                        {
+                            if (u.type == 0)
+                            {
+                                string data = "";
+                                data += u.name + " " + u.surname;
+                                data += "\nMail : " + u.mail;
+                                data += "\nType : " + client.users.GetStringType(u.type);
+                                lstUser.Items.Add(data);
+                            }
+                            else
+                            {
+                                string data = "";
+                                lstUser.Items.Add(data);
+                            }
+                        }
                         break;
                     case "Employé":
-                        AccountToDisplay = "Employé";
+                        lstUser.Items.Clear();
+                        foreach (User u in client.users.cache)
+                        {
+                            if (u.type == 1)
+                            {
+                                string data = "";
+                                data += u.name + " " + u.surname;
+                                data += "\nMail : " + u.mail;
+                                data += "\nType : " + client.users.GetStringType(u.type);
+                                lstUser.Items.Add(data);
+                            }
+                            else
+                            {
+                                string data = "";
+                                lstUser.Items.Add(data);
+                            }
+                        }
                         break;
                     case "Client":
-                        AccountToDisplay = "Client";
+                        lstUser.Items.Clear();
+                        foreach (User u in client.users.cache)
+                        {
+                            if (u.type == 2)
+                            {
+                                string data = "";
+                                data += u.name + " " + u.surname;
+                                data += "\nMail : " + u.mail;
+                                data += "\nType : " + client.users.GetStringType(u.type);
+                                lstUser.Items.Add(data);
+                            }
+                            else
+                            {
+                                string data = "";
+                                lstUser.Items.Add(data);
+                            }
+                        }
                         break;
                     case "Prospect":
-                        AccountToDisplay = "prospect";
+                        lstUser.Items.Clear();
+                        foreach (User u in client.users.cache)
+                        {
+                            if (u.type == 3)
+                            {
+                                string data = "";
+                                data += u.name + " " + u.surname;
+                                data += "\nMail : " + u.mail;
+                                data += "\nType : " + client.users.GetStringType(u.type);
+                                lstUser.Items.Add(data);
+                            }
+                            else
+                            {
+                                string data = "";
+                                lstUser.Items.Add(data);
+                            }
+                        }
                         break;
                     default:
-                        AccountToDisplay = "prospect";
+                        lstUser.Items.Clear();
+                        foreach (User u in client.users.cache)
+                        {
+                            if (u.type == 3)
+                            {
+                                string data = "";
+                                data += u.name + " " + u.surname;
+                                data += "\nMail : " + u.mail;
+                                data += "\nType : " + client.users.GetStringType(u.type);
+                                lstUser.Items.Add(data);
+                            }
+                            else
+                            {
+                                string data = "";
+                                lstUser.Items.Add(data);
+                            }
+                        }
                         break;
                 }
             }

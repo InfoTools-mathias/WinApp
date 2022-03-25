@@ -179,7 +179,7 @@
                         <ComboBoxItem Content="Administrateur" Foreground="#19191e"/>
                         <ComboBoxItem Content="Employé" Foreground="#19191e"/>
                         <ComboBoxItem Content="Client" Foreground="#19191e"/>
-                        <ComboBoxItem Content="Prospect" Foreground="#19191e" IsSelected="True"/>
+                        <ComboBoxItem Content="Prospect" Foreground="#19191e"/>
                     </ComboBox>
 
                     <Label HorizontalAlignment="Center" VerticalAlignment="Top" Margin="400,25,0,0" Width="250" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="ID :"/>
