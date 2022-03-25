@@ -725,10 +725,10 @@ namespace Gestion
             if (txtIdCategorie.Text != null || txtNameCategorie.Text != null)
             {
                 Categorie tmpCategorie = new Categorie(
-                    "",
+                    txtIdCategorie.Text,
                     txtNameCategorie.Text
                 );
-                await client.categories.Post(tmpCategorie);
+                await client.categories.Put(tmpCategorie);
                 refresh();
             }
             else
