@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using Newtonsoft.Json.Linq;
 
 namespace Gestion
 {
@@ -56,8 +57,17 @@ namespace Gestion
             try
             {
                 var content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
-                //Console.WriteLine("retour de l'api : " + await client.PostAsync(host + url, content));
-                return await client.PostAsync(host + url, content);
+                HttpResponseMessage response = await client.PostAsync(host + url, content);
+
+                //Console.WriteLine("ce que j'envoie :");
+                //foreach (var pair in JObject.Parse(JsonConvert.SerializeObject(data)))
+                //{
+                //    Console.WriteLine("{0}: {1}", pair.Key, pair.Value);
+                //}
+                //Console.WriteLine("retour de l'api :");
+                //Console.WriteLine(response);
+
+                return response;
             }
             catch (Exception ex)
             {
@@ -70,8 +80,17 @@ namespace Gestion
             try
             {
                 var content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
-                //Console.WriteLine("retour de l'api : " + await client.PutAsync(host + url, content));
-                return await client.PutAsync(host + url, content);
+                HttpResponseMessage response = await client.PutAsync(host + url, content);
+
+                Console.WriteLine("ce que j'envoie :");
+                foreach (var pair in JObject.Parse(JsonConvert.SerializeObject(data)))
+                {
+                    Console.WriteLine("{0}: {1}", pair.Key, pair.Value);
+                }
+                Console.WriteLine("retour de l'api :");
+                Console.WriteLine(response);
+
+                return response;
             }
             catch (Exception ex)
             {

@@ -13,6 +13,18 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
+/** Comment récupérer les données ?
+ * 1. les fonctions globals pour faire des appels API sont dans "services/api.cs". Des instances de chaque services y sont définie.
+ * 2. Dans chaque services (UserService, ProductService, etc..) se trouve les fonctions Get, Post, Put et Delete spécifique à chaque Objet.
+ * 3. Dans ce fichier, pour appeler l'api il suffit de faire client.objects.Get/Post/Put/Delete.
+ */
+
+/** Explication des listes :
+ * lstNomDeList -> listeBox de l'interface.
+ * nomDeList -> List<Object> pour stocké les valeurs réelle des objets.
+ * client.Object.cache -> retourne les listes complètes des objets, ces listes ne doivent jamais être modifié, sauf lors des appels api.
+ */
+
 namespace Gestion
 {
     public partial class gestion : Window
@@ -188,18 +200,15 @@ namespace Gestion
             lstEmployeeNotAtMeeting.Items.Clear();
             foreach (User u in client.users.cache)
             {
-                string data = "";
-                data += u.id;
-                data += "\n" + u.name + " " + u.surname;
                 if (u.type == 0 || u.type == 1)
                 {
                     employeesNotAtMeeting.Add(u);
-                    lstEmployeeNotAtMeeting.Items.Add(data);
+                    lstEmployeeNotAtMeeting.Items.Add(u.name + " " + u.surname);
                 }
                 else
                 {
                     customersNotAtMeeting.Add(u);
-                    lstCustomerNotAtMeeting.Items.Add(data);
+                    lstCustomerNotAtMeeting.Items.Add(u.name + " " + u.surname);
                 }
             }
 
@@ -229,7 +238,7 @@ namespace Gestion
             txtNameUser.Text = "";
             txtSurnameUser.Text = "";
             txtMailUser.Text = "";
-            cboUserType.SelectedItem = null;
+            cboUserType.Text = null;
             txtPasswordUser.Password = "";
         }
         #endregion
@@ -258,18 +267,15 @@ namespace Gestion
                     {
                         if (u.id != u1.id)
                         {
-                            string data = "";
-                            data += u.id;
-                            data += "\n" + u.name + " " + u.surname;
                             if (u.type == 0 || u.type == 1)
                             {
                                 employeesNotAtMeeting.Add(u);
-                                lstEmployeeNotAtMeeting.Items.Add(data);
+                                lstEmployeeNotAtMeeting.Items.Add(u.name + " " + u.surname);
                             }
                             else
                             {
                                 customersNotAtMeeting.Add(u);
-                                lstCustomerNotAtMeeting.Items.Add(data);
+                                lstCustomerNotAtMeeting.Items.Add(u.name + " " + u.surname);
                             }
                         }
                     }
@@ -281,18 +287,15 @@ namespace Gestion
                 employeesAtMeeting.Clear();
                 foreach (User u in meetingSelected.users)
                 {
-                    string data = "";
-                    data += u.id;
-                    data += "\n" + u.name + " " + u.surname;
                     if (u.type == 0 || u.type == 1)
                     {
                         employeesAtMeeting.Add(u);
-                        lstEmployeeAtMeeting.Items.Add(data);
+                        lstEmployeeAtMeeting.Items.Add(u.name + " " + u.surname);
                     }
                     else
                     {
                         customersAtMeeting.Add(u);
-                        lstCustomerAtMeeting.Items.Add(data);
+                        lstCustomerAtMeeting.Items.Add(u.name + " " + u.surname);
                     }
                 }
             }
@@ -410,34 +413,22 @@ namespace Gestion
             lstCustomerNotAtMeeting.Items.Clear();
             foreach (User u in customersNotAtMeeting)
             {
-                string data = "";
-                data += u.id;
-                data += "\n" + u.name + " " + u.surname;
-                lstCustomerNotAtMeeting.Items.Add(data);
+                lstCustomerNotAtMeeting.Items.Add(u.name + " " + u.surname);
             }
             lstCustomerAtMeeting.Items.Clear();
             foreach (User u in customersAtMeeting)
             {
-                string data = "";
-                data += u.id;
-                data += "\n" + u.name + " " + u.surname;
-                lstCustomerAtMeeting.Items.Add(data);
+                lstCustomerAtMeeting.Items.Add(u.name + " " + u.surname);
             }
             lstEmployeeNotAtMeeting.Items.Clear();
             foreach (User u in employeesNotAtMeeting)
             {
-                string data = "";
-                data += u.id;
-                data += "\n" + u.name + " " + u.surname;
-                lstEmployeeNotAtMeeting.Items.Add(data);
+                lstEmployeeNotAtMeeting.Items.Add(u.name + " " + u.surname);
             }
             lstEmployeeAtMeeting.Items.Clear();
             foreach (User u in employeesAtMeeting)
             {
-                string data = "";
-                data += u.id;
-                data += "\n" + u.name + " " + u.surname;
-                lstEmployeeAtMeeting.Items.Add(data);
+                lstEmployeeAtMeeting.Items.Add(u.name + " " + u.surname);
             }
         }
         #endregion
@@ -470,7 +461,7 @@ namespace Gestion
                 }
 
                 lstCategorieInProduct.Items.Clear();
-                categoriesForProduct.Clear();
+                categoriesInProduct.Clear();
                 foreach (Categorie c in productSelected.categories)
                 {
                     lstCategorieInProduct.Items.Add(c.name);
@@ -645,9 +636,10 @@ namespace Gestion
         List<User> users = new List<User>();
         private void cboUserType_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (cboUserType.SelectedValue != null)
+            try
             {
-                if ((e.AddedItems[0] as ComboBoxItem).Content as string == "administrateur" || (e.AddedItems[0] as ComboBoxItem).Content as string == "employé")
+                string selected = (e.AddedItems[0] as ComboBoxItem).Content as string;
+                if (selected == "administrateur" || selected == "employé")
                 {
                     txtPasswordUser.IsEnabled = true;
                 }
@@ -657,12 +649,16 @@ namespace Gestion
                     txtPasswordUser.Password = "";
                 }
             }
+            catch
+            {
+                hide();
+            }
         }
         private void cboUserFilter_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            string selected = (e.AddedItems[0] as ComboBoxItem).Content as string;
-            if (selected != null)
+            try
             {
+                string selected = (e.AddedItems[0] as ComboBoxItem).Content as string;
                 lstUser.SelectedItem = null;
                 lstUser.Items.Clear();
                 users.Clear();
@@ -685,6 +681,10 @@ namespace Gestion
                         users.Add(u);
                     }
                 }
+            }
+            catch
+            {
+                hide();
             }
         }
         #endregion

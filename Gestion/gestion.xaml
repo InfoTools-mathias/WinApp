@@ -58,6 +58,7 @@
                                         <Setter Property="Background" Value="Transparent"/>
                                         <Setter Property="Height" Value="25"/>
                                         <Setter Property="FontSize" Value="15px"/>
+                                        <!--<Setter Property="TextChanged" Value="txtDateMeeting_TextChanged"/>-->
                                         <!--<Setter Property="PreviewTextInput" Value="DateValidationTextBox"/>-->
                                     </Style>
                                 </Style.Resources>
