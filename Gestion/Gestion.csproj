@@ -62,6 +62,7 @@
       <DependentUpon>gestion.xaml</DependentUpon>
     </Compile>
     <Compile Include="models\Categorie.cs" />
+    <Compile Include="models\Facture.cs" />
     <Compile Include="models\Meeting.cs" />
     <Compile Include="models\User.cs" />
     <Compile Include="services\CategorieService.cs" />

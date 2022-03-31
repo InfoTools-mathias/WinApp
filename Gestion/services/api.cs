@@ -59,13 +59,13 @@ namespace Gestion
                 var content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
                 HttpResponseMessage response = await client.PostAsync(host + url, content);
 
-                //Console.WriteLine("ce que j'envoie :");
-                //foreach (var pair in JObject.Parse(JsonConvert.SerializeObject(data)))
-                //{
-                //    Console.WriteLine("{0}: {1}", pair.Key, pair.Value);
-                //}
-                //Console.WriteLine("retour de l'api :");
-                //Console.WriteLine(response);
+                Console.WriteLine("ce que j'envoie :");
+                foreach (JProperty pair in JObject.Parse(JsonConvert.SerializeObject(data)))
+                {
+                    Console.WriteLine("{0}: {1}", pair.Name, pair.Value);
+                }
+                Console.WriteLine("retour de l'api :");
+                Console.WriteLine(response);
 
                 return response;
             }
@@ -83,9 +83,9 @@ namespace Gestion
                 HttpResponseMessage response = await client.PutAsync(host + url, content);
 
                 Console.WriteLine("ce que j'envoie :");
-                foreach (var pair in JObject.Parse(JsonConvert.SerializeObject(data)))
+                foreach (JProperty pair in JObject.Parse(JsonConvert.SerializeObject(data)))
                 {
-                    Console.WriteLine("{0}: {1}", pair.Key, pair.Value);
+                    Console.WriteLine("{0}: {1}", pair.Name, pair.Value);
                 }
                 Console.WriteLine("retour de l'api :");
                 Console.WriteLine(response);
@@ -136,7 +136,7 @@ namespace Gestion
             catch (JsonException ex)
             {
                 Console.WriteLine("error : " + ex.Message);
-                return null;
+                return "error";
             }
         }
         public void killtoken()

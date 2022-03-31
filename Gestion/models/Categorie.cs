@@ -8,7 +8,7 @@ namespace Gestion
 {
     class Categorie
     {
-        #region
+        #region champs
         public string id { get; set; }
         public string name { get; set; }
         #endregion

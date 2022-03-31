@@ -48,7 +48,7 @@ namespace Gestion
 
         async void btnSession_Click(object sender, RoutedEventArgs e)
         {
-            string response = await api.auth(new User("", "", "", txtID.Text, 3, txtPW.Password));
+            string response = await api.auth(new User("", "", "", txtID.Text, 3, txtPW.Password, new List<Facture>()));
             if (response == "OK")
             {
                 gestion a = new gestion();

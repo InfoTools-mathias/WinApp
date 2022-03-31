@@ -218,7 +218,7 @@ namespace Gestion
             txtPriceProduct.Text = "";
             txtQuantityProduct.Text = "";
             txtDescriptionProduct.Text = "";
-            cboUserFilter.Text = "Tous les type de compte";
+            cboUserFilter.Text = "Tous les types de compte";
 
             // Categorie
             txtNameCategorie.Text = "";
@@ -239,7 +239,20 @@ namespace Gestion
             txtSurnameUser.Text = "";
             txtMailUser.Text = "";
             cboUserType.Text = null;
+
             txtPasswordUser.Password = "";
+            txtPasswordUser.Visibility = Visibility.Hidden;
+            lblPassword.Visibility = Visibility.Hidden;
+            lblFacture.Margin = new Thickness(1025, 25, 0, 0);
+            lstFactureUser.Margin = new Thickness(1025, 50, 0, 0);
+            lstFactureUser.Height = 275;
+
+            btnCreateFacture.Visibility = Visibility.Hidden;
+            lstFactureUser.Items.Clear();
+            facture.Visibility = Visibility.Hidden;
+            txtIDFacture.Text = "";
+            txtDateFacture.Text = "";
+            txtClientFacture.Text = "";
         }
         #endregion
 
@@ -450,12 +463,14 @@ namespace Gestion
                 categoriesForProduct.Clear();
                 foreach (Categorie c in client.categories.cache)
                 {
+                    lstCategorieForProduct.Items.Add(c.name);
+                    categoriesForProduct.Add(c);
                     foreach (Categorie c1 in productSelected.categories)
                     {
-                        if (c.id != c1.id)
+                        if (c.id == c1.id)
                         {
-                            lstCategorieForProduct.Items.Add(c.name);
-                            categoriesForProduct.Add(c);
+                            lstCategorieForProduct.Items.Remove(c.name);
+                            categoriesForProduct.Remove(c);
                         }
                     }
                 }
@@ -475,7 +490,7 @@ namespace Gestion
         }
         private async void productAjouter_Click(object sender, RoutedEventArgs e)
         {
-            if (txtNameProduct.Text != "" || txtPriceProduct.Text != "" || txtQuantityProduct.Text != "" || txtDescriptionProduct.Text != "")
+            if (txtNameProduct.Text != "" || txtPriceProduct.Text != "" || txtQuantityProduct.Text != "")
             {
                 Product tmpProduct = new Product(
                     "",
@@ -567,6 +582,34 @@ namespace Gestion
                 txtMailUser.Text = selectedUser.mail;
                 cboUserType.Text = client.users.GetStringType(selectedUser.type);
                 txtPasswordUser.Password = selectedUser.password;
+
+                btnCreateFacture.Visibility = Visibility.Visible;
+                factures.Clear();
+                lstFactureUser.Items.Clear();
+                foreach (Facture facture in selectedUser.factures)
+                {
+                    factures.Add(facture);
+                    lstFactureUser.Items.Add(facture.date);
+                }
+                #region client can't become prospect && 0 facture = can't become client
+                if (client.users.GetStringType(selectedUser.type) == "Client")
+                {
+                    itemProspect.IsEnabled = false;
+                }
+                else
+                {
+                    itemProspect.IsEnabled = true;
+                }
+
+                if (factures == new List<Facture>())
+                {
+                    itemClient.IsEnabled = false;
+                }
+                else
+                {
+                    itemClient.IsEnabled = true;
+                }
+                #endregion
             }
             else
             {
@@ -589,7 +632,8 @@ namespace Gestion
                         txtSurnameUser.Text,
                         txtMailUser.Text,
                         client.users.GetIntType(cboUserType.Text),
-                        txtPasswordUser.Password
+                        txtPasswordUser.Password,
+                        factures
                     );
                     await client.users.Post(tmpUser);
                     refresh();
@@ -616,7 +660,8 @@ namespace Gestion
                         txtSurnameUser.Text,
                         txtMailUser.Text,
                         client.users.GetIntType(cboUserType.Text),
-                        txtPasswordUser.Password
+                        txtPasswordUser.Password,
+                        factures
                     );
                     await client.users.Put(tmpUser);
                     refresh();
@@ -639,14 +684,24 @@ namespace Gestion
             try
             {
                 string selected = (e.AddedItems[0] as ComboBoxItem).Content as string;
-                if (selected == "administrateur" || selected == "employé")
+                if (selected == "Administrateur" || selected == "Employé")
                 {
-                    txtPasswordUser.IsEnabled = true;
+                    lblPassword.Visibility = Visibility.Visible;
+                    txtPasswordUser.Visibility = Visibility.Visible;
+                    lblFacture.Margin = new Thickness(1025, 100, 0, 0);
+                    lstFactureUser.Margin = new Thickness(1025, 125, 0, 0);
+                    lstFactureUser.Height = 200;
+
+                    facture.Visibility = Visibility.Hidden;
                 }
                 else
                 {
-                    txtPasswordUser.IsEnabled = false;
+                    lblPassword.Visibility = Visibility.Hidden;
+                    txtPasswordUser.Visibility = Visibility.Hidden;
                     txtPasswordUser.Password = "";
+                    lblFacture.Margin = new Thickness(1025, 25, 0, 0);
+                    lstFactureUser.Margin = new Thickness(1025, 50, 0, 0);
+                    lstFactureUser.Height = 275;
                 }
             }
             catch
@@ -675,7 +730,7 @@ namespace Gestion
                         lstUser.Items.Add(data);
                         users.Add(u);
                     }
-                    else if (selected == "Tous les type de compte")
+                    else if (selected == "Tous les types de compte")
                     {
                         lstUser.Items.Add(data);
                         users.Add(u);
@@ -687,6 +742,135 @@ namespace Gestion
                 hide();
             }
         }
+        #endregion
+        #region user factures
+        List<Facture> factures = new List<Facture>();
+        private void lstFactureUser_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if(lstFactureUser.SelectedIndex >= 0)
+            {
+                facture.Visibility = Visibility.Visible;
+                Facture selectedFacture = factures[lstFactureUser.SelectedIndex];
+                txtIDFacture.Text = selectedFacture.id;
+                txtDateFacture.Text = Convert.ToString(selectedFacture.date);
+                txtClientFacture.Text = users[lstUser.SelectedIndex].name + " " + users[lstUser.SelectedIndex].surname;
+                double total = 0;
+                foreach(LigneFacture ligne in selectedFacture.lignes)
+                {
+                    NewLine();
+                    textBox0.Text = ligne.product;
+                    textBox1.Text = Convert.ToString(ligne.quantity);
+                    textBox2.Text = Convert.ToString(ligne.price);
+                    total += ligne.quantity*ligne.price;
+                }
+                txtTotalFacture.Text = Convert.ToString(total);
+            }
+        }
+        private void btnCreateFacture_Click(object sender, RoutedEventArgs e)
+        {
+            lstFactureUser.SelectedItem = null;
+            facture.Visibility = Visibility.Visible;
+            txtIDFacture.Text = "";
+            txtDateFacture.Text = "";
+            txtClientFacture.Text = users[lstUser.SelectedIndex].name + " " + users[lstUser.SelectedIndex].surname;
+            txtTotalFacture.Text = "";
+
+            LigneFactureContainer.Children.Clear();
+            nbLine = -1;
+            gridHeight = 25;
+            NewLine();
+        }
+
+        private void btnFactureValider_Click(object sender, RoutedEventArgs e)
+        {
+            factures.Add(new Facture(
+                txtIDFacture.Text,
+                Convert.ToDateTime(txtDateFacture.Text),
+                lignes,
+                txtClientFacture.Text
+            ));
+        }
+        private void btnFactureDelete_Click(object sender, RoutedEventArgs e)
+        {
+            
+        }
+        #region LigneFacture
+        List<LigneFacture> lignes = new List<LigneFacture>();
+        private int nbLine = -1;
+        private int gridHeight = 25;
+        private TextBox textBox0 = new TextBox();
+        private TextBox textBox1 = new TextBox();
+        private TextBox textBox2 = new TextBox();
+        private Button button = new Button();
+        private void NewLine()
+        {
+            nbLine++;
+            LigneFactureContainer.Height = gridHeight;
+            gridHeight += 35;
+
+            Grid grid = new Grid();
+            grid.VerticalAlignment = VerticalAlignment.Top;
+            grid.Margin = new Thickness(0,nbLine*35,0,0);
+            grid.Width = 542;
+            grid.Height = 25;
+            LigneFactureContainer.Children.Add(grid);
+
+            button = new Button();
+            button.HorizontalAlignment = HorizontalAlignment.Left;
+            button.Width = 25;
+            button.Height = 25;
+            button.Content = "x";
+            button.FontSize = 20;
+            button.Padding = new Thickness(0,-8,0,0);
+            grid.Children.Add(button);
+
+            textBox0 = new TextBox();
+            textBox0.HorizontalAlignment = HorizontalAlignment.Left;
+            textBox0.Margin = new Thickness(35, 0, 0, 0);
+            textBox0.Width = 150;
+            textBox0.Height = 25;
+            textBox0.FontSize = 15;
+            textBox0.BorderBrush = new SolidColorBrush(Colors.White);
+            grid.Children.Add(textBox0);
+
+            Label label1 = new Label();
+            label1.Width = 150;
+            label1.Height = 25;
+            label1.FontSize = 12;
+            label1.Content = "Quantité :";
+            grid.Children.Add(label1);
+
+            textBox1 = new TextBox();
+            textBox1.Margin = new Thickness(65,0,0,0);
+            textBox1.Width = 85;
+            textBox1.Height = 25;
+            textBox1.FontSize = 15;
+            textBox1.PreviewTextInput += IntValidationTextBox;
+            grid.Children.Add(textBox1);
+
+            Label label2 = new Label();
+            label2.HorizontalAlignment = HorizontalAlignment.Right;
+            label2.Width = 150;
+            label2.Height = 25;
+            label2.FontSize = 12;
+            label2.Content = "Prix unitaire :";
+            grid.Children.Add(label2);
+
+            textBox2 = new TextBox();
+            textBox2.HorizontalAlignment = HorizontalAlignment.Right;
+            textBox2.Margin = new Thickness(50,0,0,0);
+            textBox2.Width = 70;
+            textBox2.Height = 25;
+            textBox2.FontSize = 15;
+            textBox1.PreviewTextInput += NumberValidationTextBox;
+            grid.Children.Add(textBox2);
+        }
+        private void btnFactureNewLine_Click(object sender, RoutedEventArgs e)
+        {
+            NewLine();
+            textBox0.Focus();
+        }
+        #endregion
         #endregion
 
         //categorie

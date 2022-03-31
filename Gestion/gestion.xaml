@@ -176,7 +176,7 @@
                                 </Style>
                             </ListBox.ItemContainerStyle>
                         </ListBox>
-                        <Button HorizontalAlignment="Center" VerticalAlignment="Top" Margin="1348,420,0,0" Width="125" Height="50" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="modifié les&#10;catégories" Name="goToCRUDCategorie" Click="goToCRUDCategorie_Click"/>
+                        <Button HorizontalAlignment="Center" VerticalAlignment="Top" Margin="1348,420,0,0" Width="125" Height="50" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="modifier les&#10;catégories" Name="goToCRUDCategorie" Click="goToCRUDCategorie_Click"/>
 
                         <Button HorizontalAlignment="Center" VerticalAlignment="Top" Margin="350,725,0,0" Width="200" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="ajouter" Name="productAjouter" Click="productAjouter_Click"/>
                         <Button HorizontalAlignment="Center" VerticalAlignment="Top" Margin="800,725,0,0" Width="200" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="modifier" Name="productModifier" Click="productModifier_Click"/>
@@ -219,7 +219,7 @@
                     </ListBox>
                     <Label HorizontalAlignment="Left" VerticalAlignment="Top" Margin="25,25,0,0" Width="250" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="Type de compte à afficher :"/>
                     <ComboBox HorizontalAlignment="Left" VerticalAlignment="Top" Margin="185,25,0,0" Width="250" Height="25" FontSize="15px" Foreground="#19191e" Name="cboUserFilter" SelectionChanged="cboUserFilter_SelectionChanged">
-                        <ComboBoxItem Content="Tous les type de compte" Foreground="#19191e"/>
+                        <ComboBoxItem Content="Tous les types de compte" Foreground="#19191e"/>
                         <ComboBoxItem Content="Administrateur" Foreground="#19191e"/>
                         <ComboBoxItem Content="Employé" Foreground="#19191e"/>
                         <ComboBoxItem Content="Client" Foreground="#19191e"/>
@@ -242,12 +242,43 @@
                     <ComboBox HorizontalAlignment="Center" VerticalAlignment="Top" Margin="400,350,0,0" Width="250" Height="25" FontSize="15px" Foreground="#19191e" Name="cboUserType" SelectionChanged="cboUserType_SelectionChanged">
                         <ComboBoxItem Content="Administrateur" Foreground="#19191e"/>
                         <ComboBoxItem Content="Employé" Foreground="#19191e"/>
-                        <ComboBoxItem Content="Client" Foreground="#19191e"/>
-                        <ComboBoxItem Content="Prospect" Foreground="#19191e"/>
+                        <ComboBoxItem Content="Client" Foreground="#19191e" Name="itemClient"/>
+                        <ComboBoxItem Content="Prospect" Foreground="#19191e" Name="itemProspect"/>
                     </ComboBox>
 
-                    <Label HorizontalAlignment="Center" VerticalAlignment="Top" Margin="1025,25,0,0" Width="250" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="Mot de passe :"/>
-                    <PasswordBox HorizontalAlignment="Center" VerticalAlignment="Top" Margin="1025,50,0,0" Width="250" Height="25" FontSize="15px" Foreground="#ffffff" Background="Transparent" IsEnabled="False" Name="txtPasswordUser"/>
+                    <Label HorizontalAlignment="Center" VerticalAlignment="Top" Margin="1025,25,0,0" Width="250" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Visibility="Hidden" Content="Mot de passe :" Name="lblPassword"/>
+                    <PasswordBox HorizontalAlignment="Center" VerticalAlignment="Top" Margin="1025,50,0,0" Width="250" Height="25" FontSize="15px" Foreground="#ffffff" Background="Transparent" Visibility="Hidden" Name="txtPasswordUser"/>
+                    <Label HorizontalAlignment="Center" VerticalAlignment="Top" Margin="1025,25,0,0" Width="250" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="Factures :" Name="lblFacture"/>
+                    <ListBox HorizontalAlignment="Center" VerticalAlignment="Top" Margin="1025,50,0,0" Width="250" Height="275" ItemsSource="{Binding}" Name="lstFactureUser" SelectionChanged="lstFactureUser_SelectionChanged">
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem">
+                                <Setter Property="Padding" Value="5"/>
+                                <Setter Property="Margin" Value="3"/>
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+                    </ListBox>
+                    <Button HorizontalAlignment="Center" VerticalAlignment="Top" Margin="1025,350,0,0" Width="250" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="Créer un facture" Visibility="Hidden" Name="btnCreateFacture" Click="btnCreateFacture_Click"/>
+                    <Grid HorizontalAlignment="Center" VerticalAlignment="Top" Margin="712,400,0,0" Width="562" Height="250" Background="White" Visibility="Visible" Name="facture">
+                        <Label HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0" Width="150" Height="25" FontSize="12px" Foreground="#000000" Background="Transparent" Content="ID :"/>
+                        <TextBox HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,35,0,0" Width="150" Height="25" FontSize="15px" Foreground="#000000" Background="Transparent" IsEnabled="False" Name="txtIDFacture"/>
+
+                        <Label HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,10,0,0" Width="150" Height="25" FontSize="12px" Foreground="#000000" Background="Transparent" Content="Date :"/>
+                        <TextBox HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,35,0,0" Width="150" Height="25" FontSize="15px" Foreground="#000000" Background="Transparent" IsEnabled="False" Name="txtDateFacture"/>
+
+                        <Label HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,10,10,0" Width="150" Height="25" FontSize="12px" Foreground="#000000" Background="Transparent" Content="Client :"/>
+                        <TextBox HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,35,10,0" Width="150" Height="25" FontSize="15px" Foreground="#000000" Background="Transparent" IsEnabled="False" Name="txtClientFacture"/>
+                        <ScrollViewer Margin="0,25,0,0" Height="140" VerticalScrollBarVisibility="Hidden">
+                            <Grid VerticalAlignment="Top" Margin="0,10,0,0" Height="25" Name="LigneFactureContainer">
+                            </Grid>
+                        </ScrollViewer>
+
+                        <Button HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="10,0,0,10" Padding="0,-8,0,0" Width="25" Height="25" FontSize="25" Background="Transparent" Content="+" Name="btnFactureNewLine" Click="btnFactureNewLine_Click"/>
+                        <Button HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="45,0,0,10" Width="150" Height="25" FontSize="12px" Background="Transparent" Content="Valider" Name="btnFactureValider" Click="btnFactureValider_Click"/>
+                        <Button HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="205,0,0,10" Width="150" Height="25" FontSize="12px" Background="Transparent" Content="Supprimer" Name="btnFactureDelete" Click="btnFactureDelete_Click"/>
+
+                        <Label HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,60,10" Width="50" Height="25" FontSize="12px" Foreground="#000000" Background="Transparent" Content="Total :"/>
+                        <TextBox HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,10,10" Width="50" Height="25" FontSize="15px" Foreground="#000000" Background="Transparent" IsEnabled="False" Name="txtTotalFacture"/>
+                    </Grid>
 
                     <Button HorizontalAlignment="Center" VerticalAlignment="Top" Margin="350,725,0,0" Width="200" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="ajouter" Name="userAjouter" Click="userAjouter_Click"/>
                     <Button HorizontalAlignment="Center" VerticalAlignment="Top" Margin="800,725,0,0" Width="200" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="modifier" Name="userModifier" Click="userModifier_Click"/>
