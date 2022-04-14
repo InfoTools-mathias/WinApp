@@ -13,9 +13,6 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-using Newtonsoft.Json;
-using System.Net.Http;
-
 namespace Gestion
 {
     public partial class MainWindow : Window
@@ -48,7 +45,7 @@ namespace Gestion
 
         async void btnSession_Click(object sender, RoutedEventArgs e)
         {
-            string response = await api.auth(new User("", "", "", txtID.Text, 3, txtPW.Password, new List<Facture>()));
+            string response = await api.auth(new User("", "", "", txtID.Text, 3, txtPW.Password));
             if (response == "OK")
             {
                 gestion a = new gestion();

@@ -23,48 +23,18 @@ namespace Gestion
                 List<User> users = new List<User>();
                 foreach (dynamic u in m.users)
                 {
-                    List<Facture> factures = new List<Facture>();
-                    if (u.factures != null)
-                    {
-                        foreach (dynamic f in u.factures)
-                        {
-                            List<LigneFacture> lignes = new List<LigneFacture>();
-                            if (f.lignes != null)
-                            {
-                                foreach (dynamic l in f.lignes)
-                                {
-                                    lignes.Add(new LigneFacture(
-                                        Convert.ToString(l.id),
-                                        Convert.ToString(l.product),
-                                        Convert.ToInt16(l.quantity),
-                                        Convert.ToDouble(l.price),
-                                        Convert.ToString(l.factureId)
-                                    )); ;
-                                }
-                            }
-
-                            factures.Add(new Facture(
-                                Convert.ToString(f.id),
-                                Convert.ToDateTime(f.date),
-                                lignes,
-                                Convert.ToString(f.clientId)
-                            ));
-                        }
-                    }
-
                     users.Add(new User(
                         Convert.ToString(u.id),
                         Convert.ToString(u.name),
                         Convert.ToString(u.surname),
                         Convert.ToString(u.mail),
                         Convert.ToInt16(u.type),
-                        Convert.ToString(u.password),
-                        factures
+                        Convert.ToString(u.password)
                     ));
                 }
                 cache.Add(new Meeting(
                     Convert.ToString(m.id),
-                    Convert.ToDateTime(m.date),
+                    Convert.ToString(m.date),
                     Convert.ToString(m.zip),
                     Convert.ToString(m.adress),
                     users

@@ -20,37 +20,13 @@ namespace Gestion
 
             foreach (dynamic u in users)
             {
-                List<Facture> factures = new List<Facture>();
-                foreach (dynamic f in u.factures)
-                {
-                    List<LigneFacture> lignes = new List<LigneFacture>();
-                    foreach (dynamic l in f.lignes)
-                    {
-                        lignes.Add(new LigneFacture(
-                            Convert.ToString(l.id),
-                            Convert.ToString(l.product),
-                            Convert.ToInt16(l.quantity),
-                            Convert.ToDouble(l.price),
-                            Convert.ToString(l.factureId)
-                        )); ;
-                    }
-
-                    factures.Add(new Facture(
-                        Convert.ToString(f.id),
-                        Convert.ToDateTime(f.date),
-                        lignes,
-                        Convert.ToString(f.clientId)
-                    ));
-                }
-
                 cache.Add(new User(
                     Convert.ToString(u.id),
                     Convert.ToString(u.name),
                     Convert.ToString(u.surname),
                     Convert.ToString(u.mail),
                     Convert.ToInt16(u.type),
-                    Convert.ToString(u.password),
-                    factures
+                    Convert.ToString(u.password)
                 ));
             }
 

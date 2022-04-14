@@ -20,6 +20,7 @@ namespace Gestion
         public MeetingService meetings { get; set; }
         public ProductService products { get; set; }
         public UserService users { get; set; }
+        public FactureService factures { get; set; }
         public Api()
         {
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
@@ -27,6 +28,7 @@ namespace Gestion
             meetings = new MeetingService(this);
             products = new ProductService(this);
             users = new UserService(this);
+            factures = new FactureService(this);
         }
 
         public async Task<string> Start()
@@ -35,6 +37,7 @@ namespace Gestion
             await meetings.Get();
             await products.Get();
             await users.Get();
+            await factures.Get();
             return "ok";
         }
 
@@ -44,6 +47,10 @@ namespace Gestion
             {
                 HttpResponseMessage httpResponse = await this.client.GetAsync(this.host + url);
                 string parseMessage = await httpResponse.Content.ReadAsStringAsync();
+                #region log
+                //Console.WriteLine("retour de l'api :");
+                //Console.WriteLine(JsonConvert.DeserializeObject(parseMessage));
+                #endregion
                 return JsonConvert.DeserializeObject(parseMessage);
             }
             catch (Exception ex)
@@ -58,15 +65,15 @@ namespace Gestion
             {
                 var content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
                 HttpResponseMessage response = await client.PostAsync(host + url, content);
-
-                Console.WriteLine("ce que j'envoie :");
-                foreach (JProperty pair in JObject.Parse(JsonConvert.SerializeObject(data)))
-                {
-                    Console.WriteLine("{0}: {1}", pair.Name, pair.Value);
-                }
-                Console.WriteLine("retour de l'api :");
-                Console.WriteLine(response);
-
+                #region log
+                //Console.WriteLine("ce que j'envoie :");
+                //foreach (JProperty pair in JObject.Parse(JsonConvert.SerializeObject(data)))
+                //{
+                //    Console.WriteLine("{0}: {1}", pair.Name, pair.Value);
+                //}
+                //Console.WriteLine("retour de l'api :");
+                //Console.WriteLine(response);
+                #endregion
                 return response;
             }
             catch (Exception ex)
@@ -80,16 +87,17 @@ namespace Gestion
             try
             {
                 var content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
+                //Console.WriteLine(content.ReadAsStringAsync().Result);
                 HttpResponseMessage response = await client.PutAsync(host + url, content);
-
-                Console.WriteLine("ce que j'envoie :");
-                foreach (JProperty pair in JObject.Parse(JsonConvert.SerializeObject(data)))
-                {
-                    Console.WriteLine("{0}: {1}", pair.Name, pair.Value);
-                }
-                Console.WriteLine("retour de l'api :");
-                Console.WriteLine(response);
-
+                #region log
+                //Console.WriteLine("ce que j'envoie :");
+                //foreach (JProperty pair in JObject.Parse(JsonConvert.SerializeObject(data)))
+                //{
+                //    Console.WriteLine("{0}: {1}", pair.Name, pair.Value);
+                //}
+                //Console.WriteLine("retour de l'api :");
+                //Console.WriteLine(response);
+                #endregion
                 return response;
             }
             catch (Exception ex)

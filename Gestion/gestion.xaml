@@ -5,10 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Gestion"
         mc:Ignorable="d"
-        Title="gestion" Height="900" Width="1600"
+        Title="gestion"
+        Height="900"
+        Width="1550"
         Background="#19191e">
     <Grid>
-        <TabControl HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,3,0,0" Height="873" Width="1600" Background="#19191e" BorderBrush="#19191e">
+        <TabControl Background="#19191e" BorderBrush="#19191e">
             <TabControl.Resources>
                 <Style TargetType="TabItem">
                     <Setter Property="Template">
@@ -208,8 +210,8 @@
             </TabItem>
 <!--user-->
             <TabItem Header="utilisateurs" FontSize="15px" Width="125px" Foreground="#ffffff">
-                <Grid>
-                    <ListBox HorizontalAlignment="Left" VerticalAlignment="Top" Margin="25,65,0,0" Width="800" Height="750" ItemsSource="{Binding}" Name="lstUser" SelectionChanged="lstUser_SelectionChanged">
+                <Grid Margin="-3,-3,-3,-3">
+                    <ListBox x:Name="lstUser" HorizontalAlignment="Left" Margin="25,65,0,25" Width="800" ItemsSource="{Binding}" SelectionChanged="lstUser_SelectionChanged">
                         <ListBox.ItemContainerStyle>
                             <Style TargetType="ListBoxItem">
                                 <Setter Property="Padding" Value="5"/>
@@ -226,30 +228,30 @@
                         <ComboBoxItem Content="Prospect" Foreground="#19191e"/>
                     </ComboBox>
 
-                    <Label HorizontalAlignment="Center" VerticalAlignment="Top" Margin="400,25,0,0" Width="250" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="ID :"/>
-                    <TextBox HorizontalAlignment="Center" VerticalAlignment="Top" Margin="400,50,0,0" Width="250" Height="25" FontSize="15px" Foreground="#ffffff" Background="Transparent" IsEnabled="False" Name="txtIDUser"/>
+                    <Label HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,25,375,0" Width="300" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="ID :"/>
+                    <TextBox x:Name="txtIDUser" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,50,375,0" Width="300" Height="25" FontSize="15px" Foreground="#ffffff" Background="Transparent" IsEnabled="False"/>
 
-                    <Label HorizontalAlignment="Center" VerticalAlignment="Top" Margin="400,100,0,0" Width="250" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="Nom :"/>
-                    <TextBox HorizontalAlignment="Center" VerticalAlignment="Top" Margin="400,125,0,0" Width="250" Height="25" FontSize="15px" Foreground="#ffffff" Background="Transparent" Name="txtNameUser"/>
+                    <Label HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,100,375,0" Width="300" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="Nom :"/>
+                    <TextBox x:Name="txtNameUser" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,125,375,0" Width="300" Height="25" FontSize="15px" Foreground="#ffffff" Background="Transparent"/>
 
-                    <Label HorizontalAlignment="Center" VerticalAlignment="Top" Margin="400,175,0,0" Width="250" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="Prénom :"/>
-                    <TextBox HorizontalAlignment="Center" VerticalAlignment="Top" Margin="400,200,0,0" Width="250" Height="25" FontSize="15px" Foreground="#ffffff" Background="Transparent" Name="txtSurnameUser"/>
+                    <Label HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,175,375,0" Width="300" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="Prénom :"/>
+                    <TextBox x:Name="txtSurnameUser" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,200,375,0" Width="300" Height="25" FontSize="15px" Foreground="#ffffff" Background="Transparent"/>
 
-                    <Label HorizontalAlignment="Center" VerticalAlignment="Top" Margin="400,250,0,0" Width="250" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="Mail :"/>
-                    <TextBox HorizontalAlignment="Center" VerticalAlignment="Top" Margin="400,275,0,0" Width="250" Height="25" FontSize="15px" Foreground="#ffffff" Background="Transparent" Name="txtMailUser"/>
+                    <Label HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,250,375,0" Width="300" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="Mail :"/>
+                    <TextBox x:Name="txtMailUser" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,275,375,0" Width="300" Height="25" FontSize="15px" Foreground="#ffffff" Background="Transparent"/>
 
-                    <Label HorizontalAlignment="Center" VerticalAlignment="Top" Margin="400,325,0,0" Width="250" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="Type de compte :"/>
-                    <ComboBox HorizontalAlignment="Center" VerticalAlignment="Top" Margin="400,350,0,0" Width="250" Height="25" FontSize="15px" Foreground="#19191e" Name="cboUserType" SelectionChanged="cboUserType_SelectionChanged">
+                    <Label HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,325,375,0" Width="300" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="Type de compte :"/>
+                    <ComboBox x:Name="cboUserType" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,350,375,0" Width="300" Height="25" FontSize="15px" Foreground="#19191e" SelectionChanged="cboUserType_SelectionChanged">
                         <ComboBoxItem Content="Administrateur" Foreground="#19191e"/>
                         <ComboBoxItem Content="Employé" Foreground="#19191e"/>
-                        <ComboBoxItem Content="Client" Foreground="#19191e" Name="itemClient"/>
+                        <ComboBoxItem Content="Client" Foreground="#19191e"/>
                         <ComboBoxItem Content="Prospect" Foreground="#19191e" Name="itemProspect"/>
                     </ComboBox>
 
-                    <Label HorizontalAlignment="Center" VerticalAlignment="Top" Margin="1025,25,0,0" Width="250" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Visibility="Hidden" Content="Mot de passe :" Name="lblPassword"/>
-                    <PasswordBox HorizontalAlignment="Center" VerticalAlignment="Top" Margin="1025,50,0,0" Width="250" Height="25" FontSize="15px" Foreground="#ffffff" Background="Transparent" Visibility="Hidden" Name="txtPasswordUser"/>
-                    <Label HorizontalAlignment="Center" VerticalAlignment="Top" Margin="1025,25,0,0" Width="250" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="Factures :" Name="lblFacture"/>
-                    <ListBox HorizontalAlignment="Center" VerticalAlignment="Top" Margin="1025,50,0,0" Width="250" Height="275" ItemsSource="{Binding}" Name="lstFactureUser" SelectionChanged="lstFactureUser_SelectionChanged">
+                    <Label x:Name="lblPassword" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,25,25,0" Width="300" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Visibility="Hidden" Content="Mot de passe :"/>
+                    <PasswordBox x:Name="txtPasswordUser" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,50,25,0" Width="300" Height="25" FontSize="15px" Foreground="#ffffff" Background="Transparent" Visibility="Hidden"/>
+                    <Label x:Name="lblFacture" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,25,25,0" Width="300" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="Factures :"/>
+                    <ListBox x:Name="lstFacture" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,50,25,0" Width="300" Height="325" ItemsSource="{Binding}" SelectionChanged="lstFactureUser_SelectionChanged">
                         <ListBox.ItemContainerStyle>
                             <Style TargetType="ListBoxItem">
                                 <Setter Property="Padding" Value="5"/>
@@ -257,37 +259,55 @@
                             </Style>
                         </ListBox.ItemContainerStyle>
                     </ListBox>
-                    <Button HorizontalAlignment="Center" VerticalAlignment="Top" Margin="1025,350,0,0" Width="250" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="Créer un facture" Visibility="Hidden" Name="btnCreateFacture" Click="btnCreateFacture_Click"/>
-                    <Grid HorizontalAlignment="Center" VerticalAlignment="Top" Margin="712,400,0,0" Width="562" Height="250" Background="White" Visibility="Visible" Name="facture">
-                        <Label HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0" Width="150" Height="25" FontSize="12px" Foreground="#000000" Background="Transparent" Content="ID :"/>
-                        <TextBox HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,35,0,0" Width="150" Height="25" FontSize="15px" Foreground="#000000" Background="Transparent" IsEnabled="False" Name="txtIDFacture"/>
 
-                        <Label HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,10,0,0" Width="150" Height="25" FontSize="12px" Foreground="#000000" Background="Transparent" Content="Date :"/>
-                        <TextBox HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,35,0,0" Width="150" Height="25" FontSize="15px" Foreground="#000000" Background="Transparent" IsEnabled="False" Name="txtDateFacture"/>
+                    <Button x:Name="factureNew" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,400,475,0" Width="200" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="Nouvelle facture" Click="factureNew_Click"/>
+                    <Button x:Name="factureValidate" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,400,250,0" Width="200" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="Valider la facture" Click="factureValidate_Click"/>
+                    <Button x:Name="factureDelete" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,400,25,0" Width="200" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="Supprimer la facture" Click="factureDelete_Click"/>
+                    <Grid HorizontalAlignment="Right" Margin="0,450,25,125" Width="650" Background="White" Visibility="Visible" Name="facture">
+                        <Label HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0" Width="150" Height="25" FontSize="12px" Foreground="#000000" Background="Transparent" Content="Facture N°"/>
+                        <TextBox x:Name="txtIDFacture" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,35,0,0" Width="200" Height="25" FontSize="12px" Foreground="#000000" Background="Transparent" IsEnabled="False"/>
+
+                        <Label VerticalAlignment="Top" Margin="0,10,0,0" Width="150" Height="25" FontSize="12px" Foreground="#000000" Background="Transparent" Content="Date :"/>
+                        <TextBox x:Name="txtDateFacture" VerticalAlignment="Top" Margin="0,35,0,0" Width="150" Height="25" FontSize="15px" Foreground="#000000" Background="Transparent" IsEnabled="False"/>
 
                         <Label HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,10,10,0" Width="150" Height="25" FontSize="12px" Foreground="#000000" Background="Transparent" Content="Client :"/>
-                        <TextBox HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,35,10,0" Width="150" Height="25" FontSize="15px" Foreground="#000000" Background="Transparent" IsEnabled="False" Name="txtClientFacture"/>
-                        <ScrollViewer Margin="0,25,0,0" Height="140" VerticalScrollBarVisibility="Hidden">
-                            <Grid VerticalAlignment="Top" Margin="0,10,0,0" Height="25" Name="LigneFactureContainer">
-                            </Grid>
-                        </ScrollViewer>
+                        <TextBox x:Name="txtClientFacture" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,35,10,0" Width="150" Height="25" FontSize="15px" Foreground="#000000" Background="Transparent" IsEnabled="False"/>
 
-                        <Button HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="10,0,0,10" Padding="0,-8,0,0" Width="25" Height="25" FontSize="25" Background="Transparent" Content="+" Name="btnFactureNewLine" Click="btnFactureNewLine_Click"/>
-                        <Button HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="45,0,0,10" Width="150" Height="25" FontSize="12px" Background="Transparent" Content="Valider" Name="btnFactureValider" Click="btnFactureValider_Click"/>
-                        <Button HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="205,0,0,10" Width="150" Height="25" FontSize="12px" Background="Transparent" Content="Supprimer" Name="btnFactureDelete" Click="btnFactureDelete_Click"/>
+                        <Label HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,65,0,0" Height="25" FontSize="12px" Content="Produit :"/>
+                        <Label HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,65,110,0" Width="100" Height="25" FontSize="12px" Content="Quantité :"/>
+                        <Label HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,65,10,0" Width="100" Height="25" FontSize="12px" Content="Prix unitaire :"/>
+                        <ListBox x:Name="lstLigneFacture" Margin="10,90,10,80" ItemsSource="{Binding}" FontFamily="Consolas" SelectionChanged="lstLigneFacture_SelectionChanged">
+                            <ListBox.ItemContainerStyle>
+                                <Style TargetType="ListBoxItem">
+                                    <Setter Property="Padding" Value="5"/>
+                                    <Setter Property="Margin" Value="3"/>
+                                </Style>
+                            </ListBox.ItemContainerStyle>
+                        </ListBox>
 
-                        <Label HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,60,10" Width="50" Height="25" FontSize="12px" Foreground="#000000" Background="Transparent" Content="Total :"/>
-                        <TextBox HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,10,10" Width="50" Height="25" FontSize="15px" Foreground="#000000" Background="Transparent" IsEnabled="False" Name="txtTotalFacture"/>
+                        <Label HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="10,0,0,50" Width="100" Height="25" FontSize="12px" Content="Nouvelle ligne ->"/>
+                        <Label HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="110,0,0,50" Width="105" Height="25" FontSize="12px" Content="Nom du produit :"/>
+                        <TextBox x:Name="txtProductLigne" VerticalAlignment="Bottom" Margin="210,0,245,50" Height="25" FontSize="15px"/>
+                        <Label HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,170,50" Width="65" Height="25" FontSize="12px" Content="Quantité :"/>
+                        <TextBox x:Name="txtQuantityLigne" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,120,50" Width="50" Height="25" FontSize="15px" PreviewTextInput="IntValidationTextBox"/>
+                        <Label HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,60,50" Width="50" Height="25" FontSize="12px" Content="Client :"/>
+                        <TextBox x:Name="txtPriceLigne" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,10,50" Width="50" Height="25" FontSize="15px" PreviewTextInput="NumberValidationTextBox"/>
+
+                        <Button x:Name="ligneValidate" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="10,0,0,10" Width="150" Height="25" FontSize="12px" Background="Transparent" Content="Valider la ligne" Click="ligneValidate_Click"/>
+                        <Button x:Name="ligneDelete" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="170,0,0,10" Width="150" Height="25" FontSize="12px" Background="Transparent" Content="Supprimer la ligne" Click="ligneDelete_Click"/>
+
+                        <Label HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,60,10" Width="50" Height="25" FontSize="12px" Content="Total :"/>
+                        <TextBox x:Name="txtTotalFacture" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,10,10" Width="50" Height="25" FontSize="15px" IsEnabled="False"/>
                     </Grid>
 
-                    <Button HorizontalAlignment="Center" VerticalAlignment="Top" Margin="350,725,0,0" Width="200" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="ajouter" Name="userAjouter" Click="userAjouter_Click"/>
-                    <Button HorizontalAlignment="Center" VerticalAlignment="Top" Margin="800,725,0,0" Width="200" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="modifier" Name="userModifier" Click="userModifier_Click"/>
-                    <Button HorizontalAlignment="Center" VerticalAlignment="Top" Margin="1250,725,0,0" Width="200" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="supprimer" Name="userSupprimer" Click="userSupprimer_Click"/>
-                    <Button HorizontalAlignment="Center" VerticalAlignment="Top" Margin="800,775,0,0" Width="200" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="rafraîchir" Name="userRefresh" Click="refresh_Click"/>
+                    <Button x:Name="userAjouter" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,475,75" Width="200" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="ajouter" Click="userAjouter_Click"/>
+                    <Button x:Name="userModifier" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,250,75" Width="200" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="modifier" Click="userModifier_Click"/>
+                    <Button x:Name="userSupprimer" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,25,75" Width="200" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="supprimer" Click="userSupprimer_Click"/>
+                    <Button x:Name="userRefresh" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,250,25" Width="200" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="rafraîchir" Click="refresh_Click"/>
                 </Grid>
             </TabItem>
         </TabControl>
-        <Button HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,5,5,0" Width="200" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="déconnexion" Name="disconnect" Click="disconnect_Click"/>
-        <Label HorizontalAlignment="Center" VerticalAlignment="Top" Margin="800,710,0,0" Height="25" FontSize="12px" Foreground="#ff0000" Background="Transparent" Content="" Name="lblWrong"/>
+        <Button x:Name="disconnect" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,10,10,0" Width="200" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="déconnexion" Click="disconnect_Click"/>
+        <Label x:Name="lblWrong" HorizontalAlignment="Right" VerticalAlignment="Bottom" HorizontalContentAlignment="Center" Margin="0,0,25,100" Width="650" Height="25" FontSize="12px" Foreground="#ff0000" Background="Transparent" Content=""/>
     </Grid>
 </Window>

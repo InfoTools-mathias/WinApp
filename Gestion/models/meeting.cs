@@ -7,14 +7,14 @@ namespace Gestion
     {
         #region champs
         public string id { get; set; }
-        public DateTime date { get; set; }
+        public string date { get; set; }
         public string zip { get; set; }
         public string adress { get; set; }
         public List<User> users { get; set; }
         #endregion
 
         #region constructeurs
-        public Meeting(string Id, DateTime Date, string Zip, string Adress, List<User> Users)
+        public Meeting(string Id, string Date, string Zip, string Adress, List<User> Users)
         {
             id = Id;
             date = Date;

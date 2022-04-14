@@ -108,6 +108,7 @@ namespace Gestion
 
             // User
             lstUser.Items.Clear();
+            users.Clear();
             foreach (User u in client.users.cache)
             {
                 users.Add(u);
@@ -243,16 +244,11 @@ namespace Gestion
             txtPasswordUser.Password = "";
             txtPasswordUser.Visibility = Visibility.Hidden;
             lblPassword.Visibility = Visibility.Hidden;
-            lblFacture.Margin = new Thickness(1025, 25, 0, 0);
-            lstFactureUser.Margin = new Thickness(1025, 50, 0, 0);
-            lstFactureUser.Height = 275;
+            lblFacture.Margin = new Thickness(0, 25, 25, 0);
+            lstFacture.Margin = new Thickness(0, 50, 25, 0);
+            lstFacture.Height = 325;
 
-            btnCreateFacture.Visibility = Visibility.Hidden;
-            lstFactureUser.Items.Clear();
-            facture.Visibility = Visibility.Hidden;
-            txtIDFacture.Text = "";
-            txtDateFacture.Text = "";
-            txtClientFacture.Text = "";
+            hideFacture();
         }
         #endregion
 
@@ -331,14 +327,14 @@ namespace Gestion
                     users.Add(u);
                 }
 
-                Meeting tmpMeeting = new Meeting(
+                DateTime tmpDate = Convert.ToDateTime(txtDateMeeting.Text + " " + txtHourMeeting.Text + ":" + txtMinuteMeeting.Text + ":00");
+                await client.meetings.Post(new Meeting(
                     "",
-                    Convert.ToDateTime(txtDateMeeting.Text + " " + txtHourMeeting.Text + ":" + txtMinuteMeeting.Text + ":00"),
+                    tmpDate.Year.ToString("0000") + "-" + tmpDate.Month.ToString("00") + "-" + tmpDate.Day.ToString("00") + "T" + tmpDate.Hour.ToString("00") + ":" + tmpDate.Minute.ToString("00") + ":00.000Z",
                     txtZipMeeting.Text,
                     txtAdressMeeting.Text,
                     users
-                );
-                await client.meetings.Post(tmpMeeting);
+                ));
                 refresh();
             }
             else
@@ -360,9 +356,10 @@ namespace Gestion
                     users.Add(u);
                 }
 
+                DateTime tmpDate = Convert.ToDateTime(txtDateMeeting.Text + " " + txtHourMeeting.Text + ":" + txtMinuteMeeting.Text + ":00");
                 Meeting tmpMeeting = new Meeting(
                     txtIDMeeting.Text,
-                    Convert.ToDateTime(txtDateMeeting.Text + " " + txtHourMeeting.Text + ":" + txtMinuteMeeting.Text + ":00"),
+                    tmpDate.Year.ToString("0000") + "-" + tmpDate.Month.ToString("00") + "-" + tmpDate.Day.ToString("00") + "T" + tmpDate.Hour.ToString("00") + ":" + tmpDate.Minute.ToString("00") + ":00.000Z",
                     txtZipMeeting.Text,
                     txtAdressMeeting.Text,
                     users
@@ -568,312 +565,7 @@ namespace Gestion
             }
         }
         #endregion
-
-        //user
-        private void lstUser_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (lstUser.SelectedIndex >= 0)
-            {
-                User selectedUser = users[lstUser.SelectedIndex];
-
-                txtIDUser.Text = selectedUser.id;
-                txtNameUser.Text = selectedUser.name;
-                txtSurnameUser.Text = selectedUser.surname;
-                txtMailUser.Text = selectedUser.mail;
-                cboUserType.Text = client.users.GetStringType(selectedUser.type);
-                txtPasswordUser.Password = selectedUser.password;
-
-                btnCreateFacture.Visibility = Visibility.Visible;
-                factures.Clear();
-                lstFactureUser.Items.Clear();
-                foreach (Facture facture in selectedUser.factures)
-                {
-                    factures.Add(facture);
-                    lstFactureUser.Items.Add(facture.date);
-                }
-                #region client can't become prospect && 0 facture = can't become client
-                if (client.users.GetStringType(selectedUser.type) == "Client")
-                {
-                    itemProspect.IsEnabled = false;
-                }
-                else
-                {
-                    itemProspect.IsEnabled = true;
-                }
-
-                if (factures == new List<Facture>())
-                {
-                    itemClient.IsEnabled = false;
-                }
-                else
-                {
-                    itemClient.IsEnabled = true;
-                }
-                #endregion
-            }
-            else
-            {
-                hide();
-            }
-        }
-        private async void userAjouter_Click(object sender, RoutedEventArgs e)
-        {
-            if (txtNameUser.Text != "" || txtSurnameUser.Text != "" || txtMailUser.Text != "" || cboUserType.Text != null)
-            {
-                if (txtPasswordUser.Password == "" && (client.users.GetIntType(cboUserType.Text) == 0 || client.users.GetIntType(cboUserType.Text) == 1))
-                {
-                    lblWrong.Content = "Un compte emplyé ou administrateur nécessite un mot de passe.";
-                }
-                else
-                {
-                    User tmpUser = new User(
-                        "",
-                        txtNameUser.Text,
-                        txtSurnameUser.Text,
-                        txtMailUser.Text,
-                        client.users.GetIntType(cboUserType.Text),
-                        txtPasswordUser.Password,
-                        factures
-                    );
-                    await client.users.Post(tmpUser);
-                    refresh();
-                }
-            }
-            else
-            {
-                lblWrong.Content = "Tous les champs ne sont pas remplis.";
-            }
-        }
-        private async void userModifier_Click(object sender, RoutedEventArgs e)
-        {
-            if (txtIDUser.Text != "" || txtNameUser.Text != "" || txtSurnameUser.Text != "" || txtMailUser.Text != "" || cboUserType.SelectedValue != null)
-            {
-                if (txtPasswordUser.Password == "" && (client.users.GetIntType(cboUserType.Text) == 0 || client.users.GetIntType(cboUserType.Text) == 1))
-                {
-                    lblWrong.Content = "Un compte emplyé ou administrateur nécessite un mot de passe.";
-                }
-                else
-                {
-                    User tmpUser = new User(
-                        txtIDUser.Text,
-                        txtNameUser.Text,
-                        txtSurnameUser.Text,
-                        txtMailUser.Text,
-                        client.users.GetIntType(cboUserType.Text),
-                        txtPasswordUser.Password,
-                        factures
-                    );
-                    await client.users.Put(tmpUser);
-                    refresh();
-                }
-            }
-            else
-            {
-                lblWrong.Content = "Tous les champs ne sont pas remplis";
-            }
-        }
-        private async void userSupprimer_Click(object sender, RoutedEventArgs e)
-        {
-            await client.users.Delete(txtIDUser.Text);
-            refresh();
-        }
-        #region user settings
-        List<User> users = new List<User>();
-        private void cboUserType_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            try
-            {
-                string selected = (e.AddedItems[0] as ComboBoxItem).Content as string;
-                if (selected == "Administrateur" || selected == "Employé")
-                {
-                    lblPassword.Visibility = Visibility.Visible;
-                    txtPasswordUser.Visibility = Visibility.Visible;
-                    lblFacture.Margin = new Thickness(1025, 100, 0, 0);
-                    lstFactureUser.Margin = new Thickness(1025, 125, 0, 0);
-                    lstFactureUser.Height = 200;
-
-                    facture.Visibility = Visibility.Hidden;
-                }
-                else
-                {
-                    lblPassword.Visibility = Visibility.Hidden;
-                    txtPasswordUser.Visibility = Visibility.Hidden;
-                    txtPasswordUser.Password = "";
-                    lblFacture.Margin = new Thickness(1025, 25, 0, 0);
-                    lstFactureUser.Margin = new Thickness(1025, 50, 0, 0);
-                    lstFactureUser.Height = 275;
-                }
-            }
-            catch
-            {
-                hide();
-            }
-        }
-        private void cboUserFilter_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            try
-            {
-                string selected = (e.AddedItems[0] as ComboBoxItem).Content as string;
-                lstUser.SelectedItem = null;
-                lstUser.Items.Clear();
-                users.Clear();
-
-                foreach (User u in client.users.cache)
-                {
-                    string data = "";
-                    data += u.name + " " + u.surname;
-                    data += "\nMail : " + u.mail;
-                    data += "\nType : " + client.users.GetStringType(u.type);
-
-                    if (selected == client.users.GetStringType(u.type))
-                    {
-                        lstUser.Items.Add(data);
-                        users.Add(u);
-                    }
-                    else if (selected == "Tous les types de compte")
-                    {
-                        lstUser.Items.Add(data);
-                        users.Add(u);
-                    }
-                }
-            }
-            catch
-            {
-                hide();
-            }
-        }
-        #endregion
-        #region user factures
-        List<Facture> factures = new List<Facture>();
-        private void lstFactureUser_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if(lstFactureUser.SelectedIndex >= 0)
-            {
-                facture.Visibility = Visibility.Visible;
-                Facture selectedFacture = factures[lstFactureUser.SelectedIndex];
-                txtIDFacture.Text = selectedFacture.id;
-                txtDateFacture.Text = Convert.ToString(selectedFacture.date);
-                txtClientFacture.Text = users[lstUser.SelectedIndex].name + " " + users[lstUser.SelectedIndex].surname;
-                double total = 0;
-                foreach(LigneFacture ligne in selectedFacture.lignes)
-                {
-                    NewLine();
-                    textBox0.Text = ligne.product;
-                    textBox1.Text = Convert.ToString(ligne.quantity);
-                    textBox2.Text = Convert.ToString(ligne.price);
-                    total += ligne.quantity*ligne.price;
-                }
-                txtTotalFacture.Text = Convert.ToString(total);
-            }
-        }
-        private void btnCreateFacture_Click(object sender, RoutedEventArgs e)
-        {
-            lstFactureUser.SelectedItem = null;
-            facture.Visibility = Visibility.Visible;
-            txtIDFacture.Text = "";
-            txtDateFacture.Text = "";
-            txtClientFacture.Text = users[lstUser.SelectedIndex].name + " " + users[lstUser.SelectedIndex].surname;
-            txtTotalFacture.Text = "";
-
-            LigneFactureContainer.Children.Clear();
-            nbLine = -1;
-            gridHeight = 25;
-            NewLine();
-        }
-
-        private void btnFactureValider_Click(object sender, RoutedEventArgs e)
-        {
-            factures.Add(new Facture(
-                txtIDFacture.Text,
-                Convert.ToDateTime(txtDateFacture.Text),
-                lignes,
-                txtClientFacture.Text
-            ));
-        }
-        private void btnFactureDelete_Click(object sender, RoutedEventArgs e)
-        {
-            
-        }
-        #region LigneFacture
-        List<LigneFacture> lignes = new List<LigneFacture>();
-        private int nbLine = -1;
-        private int gridHeight = 25;
-        private TextBox textBox0 = new TextBox();
-        private TextBox textBox1 = new TextBox();
-        private TextBox textBox2 = new TextBox();
-        private Button button = new Button();
-        private void NewLine()
-        {
-            nbLine++;
-            LigneFactureContainer.Height = gridHeight;
-            gridHeight += 35;
-
-            Grid grid = new Grid();
-            grid.VerticalAlignment = VerticalAlignment.Top;
-            grid.Margin = new Thickness(0,nbLine*35,0,0);
-            grid.Width = 542;
-            grid.Height = 25;
-            LigneFactureContainer.Children.Add(grid);
-
-            button = new Button();
-            button.HorizontalAlignment = HorizontalAlignment.Left;
-            button.Width = 25;
-            button.Height = 25;
-            button.Content = "x";
-            button.FontSize = 20;
-            button.Padding = new Thickness(0,-8,0,0);
-            grid.Children.Add(button);
-
-            textBox0 = new TextBox();
-            textBox0.HorizontalAlignment = HorizontalAlignment.Left;
-            textBox0.Margin = new Thickness(35, 0, 0, 0);
-            textBox0.Width = 150;
-            textBox0.Height = 25;
-            textBox0.FontSize = 15;
-            textBox0.BorderBrush = new SolidColorBrush(Colors.White);
-            grid.Children.Add(textBox0);
-
-            Label label1 = new Label();
-            label1.Width = 150;
-            label1.Height = 25;
-            label1.FontSize = 12;
-            label1.Content = "Quantité :";
-            grid.Children.Add(label1);
-
-            textBox1 = new TextBox();
-            textBox1.Margin = new Thickness(65,0,0,0);
-            textBox1.Width = 85;
-            textBox1.Height = 25;
-            textBox1.FontSize = 15;
-            textBox1.PreviewTextInput += IntValidationTextBox;
-            grid.Children.Add(textBox1);
-
-            Label label2 = new Label();
-            label2.HorizontalAlignment = HorizontalAlignment.Right;
-            label2.Width = 150;
-            label2.Height = 25;
-            label2.FontSize = 12;
-            label2.Content = "Prix unitaire :";
-            grid.Children.Add(label2);
-
-            textBox2 = new TextBox();
-            textBox2.HorizontalAlignment = HorizontalAlignment.Right;
-            textBox2.Margin = new Thickness(50,0,0,0);
-            textBox2.Width = 70;
-            textBox2.Height = 25;
-            textBox2.FontSize = 15;
-            textBox1.PreviewTextInput += NumberValidationTextBox;
-            grid.Children.Add(textBox2);
-        }
-        private void btnFactureNewLine_Click(object sender, RoutedEventArgs e)
-        {
-            NewLine();
-            textBox0.Focus();
-        }
-        #endregion
-        #endregion
-
-        //categorie
+        #region categories
         private void lstCategorie_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (lstCategorie.SelectedIndex >= 0)
@@ -939,6 +631,257 @@ namespace Gestion
             gridCRUDCategorie.Visibility = Visibility.Hidden;
             gridListsCategorie.Visibility = Visibility.Visible;
         }
+        #endregion
+        #endregion
+
+        //user
+        private void lstUser_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (lstUser.SelectedIndex >= 0)
+            {
+                User selectedUser = users[lstUser.SelectedIndex];
+
+                txtIDUser.Text = selectedUser.id;
+                txtNameUser.Text = selectedUser.name;
+                txtSurnameUser.Text = selectedUser.surname;
+                txtMailUser.Text = selectedUser.mail;
+                cboUserType.Text = client.users.GetStringType(selectedUser.type);
+                txtPasswordUser.Password = selectedUser.password;
+
+                #region client can't become prospect
+                if (client.users.GetStringType(selectedUser.type) == "Client")
+                {
+                    itemProspect.IsEnabled = false;
+                }
+                else
+                {
+                    itemProspect.IsEnabled = true;
+                }
+                #endregion
+
+                factures.Clear();
+                lstFacture.Items.Clear();
+                foreach(Facture f in client.factures.cache)
+                {
+                    if(f.clientId == selectedUser.id)
+                    {
+                        factures.Add(f);
+                        lstFacture.Items.Add(Convert.ToString(f.date));
+                    }
+                }
+            }
+            else
+            {
+                hide();
+            }
+        }
+        private async void userAjouter_Click(object sender, RoutedEventArgs e)
+        {
+            if (txtNameUser.Text != "" || txtSurnameUser.Text != "" || txtMailUser.Text != "" || cboUserType.Text != null)
+            {
+                if (txtPasswordUser.Password == "" && (client.users.GetIntType(cboUserType.Text) == 0 || client.users.GetIntType(cboUserType.Text) == 1))
+                {
+                    lblWrong.Content = "Un compte emplyé ou administrateur nécessite un mot de passe.";
+                }
+                else
+                {
+                    User tmpUser = new User(
+                        "",
+                        txtNameUser.Text,
+                        txtSurnameUser.Text,
+                        txtMailUser.Text,
+                        client.users.GetIntType(cboUserType.Text),
+                        txtPasswordUser.Password
+                    );
+                    await client.users.Post(tmpUser);
+                    refresh();
+                }
+            }
+            else
+            {
+                lblWrong.Content = "Tous les champs ne sont pas remplis.";
+            }
+        }
+        private async void userModifier_Click(object sender, RoutedEventArgs e)
+        {
+            if (txtIDUser.Text != "" || txtNameUser.Text != "" || txtSurnameUser.Text != "" || txtMailUser.Text != "" || cboUserType.SelectedValue != null)
+            {
+                if (txtPasswordUser.Password == "" && (client.users.GetIntType(cboUserType.Text) == 0 || client.users.GetIntType(cboUserType.Text) == 1))
+                {
+                    lblWrong.Content = "Un compte emplyé ou administrateur nécessite un mot de passe.";
+                }
+                else
+                {
+                    User tmpUser = new User(
+                        txtIDUser.Text,
+                        txtNameUser.Text,
+                        txtSurnameUser.Text,
+                        txtMailUser.Text,
+                        client.users.GetIntType(cboUserType.Text),
+                        txtPasswordUser.Password
+                    );
+                    await client.users.Put(tmpUser);
+                    refresh();
+                }
+            }
+            else
+            {
+                lblWrong.Content = "Tous les champs ne sont pas remplis";
+            }
+        }
+        private async void userSupprimer_Click(object sender, RoutedEventArgs e)
+        {
+            await client.users.Delete(txtIDUser.Text);
+            refresh();
+        }
+        #region user settings
+        List<User> users = new List<User>();
+        private void cboUserType_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            try
+            {
+                string selected = (e.AddedItems[0] as ComboBoxItem).Content as string;
+                if (selected == "Administrateur" || selected == "Employé")
+                {
+                    lblPassword.Visibility = Visibility.Visible;
+                    txtPasswordUser.Visibility = Visibility.Visible;
+                    lblFacture.Margin = new Thickness(0, 100, 25, 0);
+                    lstFacture.Margin = new Thickness(0, 125, 25, 0);
+                    lstFacture.Height = 250;
+                }
+                else
+                {
+                    lblPassword.Visibility = Visibility.Hidden;
+                    txtPasswordUser.Visibility = Visibility.Hidden;
+                    txtPasswordUser.Password = "";
+                    lblFacture.Margin = new Thickness(0, 25, 25, 0);
+                    lstFacture.Margin = new Thickness(0, 50, 25, 0);
+                    lstFacture.Height = 325;
+                }
+            }
+            catch
+            {
+                hide();
+            }
+        }
+        private void cboUserFilter_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            try
+            {
+                string selected = (e.AddedItems[0] as ComboBoxItem).Content as string;
+                lstUser.SelectedItem = null;
+                lstUser.Items.Clear();
+                users.Clear();
+
+                foreach (User u in client.users.cache)
+                {
+                    string data = "";
+                    data += u.name + " " + u.surname;
+                    data += "\nMail : " + u.mail;
+                    data += "\nType : " + client.users.GetStringType(u.type);
+
+                    if (selected == client.users.GetStringType(u.type))
+                    {
+                        lstUser.Items.Add(data);
+                        users.Add(u);
+                    }
+                    else if (selected == "Tous les types de compte")
+                    {
+                        lstUser.Items.Add(data);
+                        users.Add(u);
+                    }
+                }
+            }
+            catch
+            {
+                hide();
+            }
+        }
+        #endregion
+        #region Factures
+        List<Facture> factures = new List<Facture>();
+        private void hideFacture()
+        {
+            lstFacture.Items.Clear();
+            factures.Clear();
+            txtIDFacture.Text = "";
+            txtDateFacture.Text = "";
+            txtClientFacture.Text = "";
+            hideLines();
+        }
+        private void lstFactureUser_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if(lstFacture.SelectedIndex >= 0)
+            {
+                Facture selectedFacture = factures[lstFacture.SelectedIndex];
+                txtIDFacture.Text = selectedFacture.id;
+                txtDateFacture.Text = Convert.ToString(selectedFacture.date);
+                txtClientFacture.Text = users[lstUser.SelectedIndex].name + " " + users[lstUser.SelectedIndex].surname;
+            }
+            else
+            {
+                hideFacture();
+            }
+        }
+        private async void factureNew_Click(object sender, RoutedEventArgs e)
+        {
+            if(txtIDUser.Text != "")
+            {
+                int selectedUser = lstUser.SelectedIndex;
+                lstUser.SelectedItem = null;
+
+                await client.factures.Post(new Facture(
+                    "",
+                    new DateTime(),
+                    new List<LigneFacture>(),
+                    txtIDUser.Text
+                ));
+                refresh();
+                lstUser.SelectedIndex = selectedUser;
+            }
+            else
+            {
+                lblWrong.Content = "Choisissez un utilisateur pour créer une facture.";
+            }
+        }
+        private void factureValidate_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+        private void factureDelete_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+        #region LigneFacture
+        List<LigneFacture> LignesFacture = new List<LigneFacture>();
+        private void hideLines()
+        {
+            lstLigneFacture.Items.Clear();
+            LignesFacture.Clear();
+            txtProductLigne.Text = "";
+            txtQuantityLigne.Text = "";
+            txtPriceLigne.Text = "";
+        }
+        private void lstLigneFacture_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (lstLigneFacture.SelectedIndex >= 0)
+            {
+                
+            }
+            else
+            {
+                hideLines();
+            }
+        }
+        private void ligneValidate_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+        private void ligneDelete_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+        #endregion
         #endregion
 
         //disconnect
