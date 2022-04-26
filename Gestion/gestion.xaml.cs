@@ -248,6 +248,7 @@ namespace Gestion
             lstFacture.Margin = new Thickness(0, 50, 25, 0);
             lstFacture.Height = 325;
 
+            facture.Visibility = Visibility.Hidden;
             hideFacture();
         }
         #endregion
@@ -639,6 +640,9 @@ namespace Gestion
         {
             if (lstUser.SelectedIndex >= 0)
             {
+                facture.Visibility = Visibility.Hidden;
+
+
                 User selectedUser = users[lstUser.SelectedIndex];
 
                 txtIDUser.Text = selectedUser.id;
@@ -685,12 +689,15 @@ namespace Gestion
                 }
                 else
                 {
+                    int tmpType = client.users.GetIntType(cboUserType.Text);
+                    if (factures.Count == 0 && tmpType == 2) tmpType = 3;
+                    if (factures.Count > 0 && tmpType == 3) tmpType = 2;
                     User tmpUser = new User(
                         "",
                         txtNameUser.Text,
                         txtSurnameUser.Text,
                         txtMailUser.Text,
-                        client.users.GetIntType(cboUserType.Text),
+                        tmpType,
                         txtPasswordUser.Password
                     );
                     await client.users.Post(tmpUser);
@@ -712,12 +719,15 @@ namespace Gestion
                 }
                 else
                 {
+                    int tmpType = client.users.GetIntType(cboUserType.Text);
+                    if (factures.Count == 0 && tmpType == 2) tmpType = 3;
+                    if (factures.Count > 0 && tmpType == 3) tmpType = 2;
                     User tmpUser = new User(
                         txtIDUser.Text,
                         txtNameUser.Text,
                         txtSurnameUser.Text,
                         txtMailUser.Text,
-                        client.users.GetIntType(cboUserType.Text),
+                        tmpType,
                         txtPasswordUser.Password
                     );
                     await client.users.Put(tmpUser);
@@ -731,8 +741,15 @@ namespace Gestion
         }
         private async void userSupprimer_Click(object sender, RoutedEventArgs e)
         {
-            await client.users.Delete(txtIDUser.Text);
-            refresh();
+            if (txtIDUser.Text != "")
+            {
+                await client.users.Delete(txtIDUser.Text);
+                refresh();
+            }
+            else
+            {
+                lblWrong.Content = "Pour supprimer un utilisateur, il faut le sélectionner";
+            }
         }
         #region user settings
         List<User> users = new List<User>();
@@ -809,10 +826,12 @@ namespace Gestion
             txtClientFacture.Text = "";
             hideLines();
         }
-        private void lstFactureUser_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void lstFactureUser_SelectionChanged(object fsender, SelectionChangedEventArgs e)
         {
             if(lstFacture.SelectedIndex >= 0)
             {
+                facture.Visibility = Visibility.Visible;
+
                 Facture selectedFacture = factures[lstFacture.SelectedIndex];
                 txtIDFacture.Text = selectedFacture.id;
                 txtDateFacture.Text = Convert.ToString(selectedFacture.date);
@@ -823,34 +842,51 @@ namespace Gestion
                 hideFacture();
             }
         }
-        private async void factureNew_Click(object sender, RoutedEventArgs e)
+        private void factureNew_Click(object sender, RoutedEventArgs e)
         {
-            if(txtIDUser.Text != "")
+            if (lstUser.SelectedIndex >= 0) if (lstFacture.Items.Count == 0 || lstFacture.Items[lstFacture.Items.Count - 1].ToString() != "en cours...")
             {
-                int selectedUser = lstUser.SelectedIndex;
-                lstUser.SelectedItem = null;
+                facture.Visibility = Visibility.Visible; // affichage de la facture
 
-                await client.factures.Post(new Facture(
-                    "",
-                    new DateTime(),
-                    new List<LigneFacture>(),
-                    txtIDUser.Text
-                ));
+                if (client.users.GetIntType(cboUserType.Text) == 3) cboUserType.Text = "Client";
+                itemProspect.IsEnabled = false;
+
+                lstFacture.Items.Add("en cours...");
+                factures.Add(new Facture("", DateTime.Now, new List<LigneFacture>(), txtIDUser.Text));
+                txtClientFacture.Text = users[lstUser.SelectedIndex].name;
+                txtDateFacture.Text = DateTime.Now.ToString();
+            }
+        }
+        private async void factureValidate_Click(object sender, RoutedEventArgs e)
+        {
+            if (txtIDFacture.Text == "") await client.factures.Post(new Facture(
+                "",
+                new DateTime(),
+                LignesFacture,
+                txtIDUser.Text
+            ));
+            else await client.factures.Put(new Facture(
+                txtIDFacture.Text,
+                Convert.ToDateTime(txtDateFacture.Text),
+                LignesFacture,
+                txtIDUser.Text
+            ));
+        }
+        private async void factureDelete_Click(object sender, RoutedEventArgs e)
+        {
+            if (txtIDFacture.Text != "")
+            {
+                await client.factures.Delete(txtIDFacture.Text);
                 refresh();
-                lstUser.SelectedIndex = selectedUser;
+            }
+            else if (txtClientFacture.Text != "")
+            {
+                refresh();
             }
             else
             {
-                lblWrong.Content = "Choisissez un utilisateur pour créer une facture.";
+                lblWrong.Content = "Pour supprimer une facture, il faut la sélectionner";
             }
-        }
-        private void factureValidate_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-        private void factureDelete_Click(object sender, RoutedEventArgs e)
-        {
-
         }
         #region LigneFacture
         List<LigneFacture> LignesFacture = new List<LigneFacture>();

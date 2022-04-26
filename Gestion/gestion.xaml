@@ -263,7 +263,7 @@
                     <Button x:Name="factureNew" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,400,475,0" Width="200" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="Nouvelle facture" Click="factureNew_Click"/>
                     <Button x:Name="factureValidate" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,400,250,0" Width="200" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="Valider la facture" Click="factureValidate_Click"/>
                     <Button x:Name="factureDelete" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,400,25,0" Width="200" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="Supprimer la facture" Click="factureDelete_Click"/>
-                    <Grid HorizontalAlignment="Right" Margin="0,450,25,125" Width="650" Background="White" Visibility="Visible" Name="facture">
+                    <Grid x:Name="facture" HorizontalAlignment="Right" Margin="0,450,25,125" Width="650" Background="White" Visibility="Hidden">
                         <Label HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0" Width="150" Height="25" FontSize="12px" Foreground="#000000" Background="Transparent" Content="Facture N°"/>
                         <TextBox x:Name="txtIDFacture" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,35,0,0" Width="200" Height="25" FontSize="12px" Foreground="#000000" Background="Transparent" IsEnabled="False"/>
 

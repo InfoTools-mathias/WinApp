@@ -52,13 +52,13 @@ namespace Gestion
         {
             switch (name)
             {
-                case "administrateur":
+                case "Administrateur":
                     return 0;
-                case "employé":
+                case "Employé":
                     return 1;
-                case "client":
+                case "Client":
                     return 2;
-                case "prospect":
+                case "Prospect":
                     return 3;
                 default:
                     return 3;
