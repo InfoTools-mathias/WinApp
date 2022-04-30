@@ -267,45 +267,49 @@ namespace Gestion
                 txtZipMeeting.Text = meetingSelected.zip;
                 txtAdressMeeting.Text = meetingSelected.adress;
 
+
+                // Remplissage des listes d'utilisateurs
                 lstCustomerNotAtMeeting.Items.Clear();
                 lstEmployeeNotAtMeeting.Items.Clear();
                 customersNotAtMeeting.Clear();
                 employeesNotAtMeeting.Clear();
-                foreach (User u in client.users.cache)
-                {
-                    foreach (User u1 in meetingSelected.users)
-                    {
-                        if (u.id != u1.id)
-                        {
-                            if (u.type == 0 || u.type == 1)
-                            {
-                                employeesNotAtMeeting.Add(u);
-                                lstEmployeeNotAtMeeting.Items.Add(u.name + " " + u.surname);
-                            }
-                            else
-                            {
-                                customersNotAtMeeting.Add(u);
-                                lstCustomerNotAtMeeting.Items.Add(u.name + " " + u.surname);
-                            }
-                        }
-                    }
-                }
 
                 lstCustomerAtMeeting.Items.Clear();
                 lstEmployeeAtMeeting.Items.Clear();
                 customersAtMeeting.Clear();
                 employeesAtMeeting.Clear();
+
+                foreach (User u in client.users.cache)
+                {
+                    
+                    if (u.type == 0 || u.type == 1)
+                    {
+                        employeesNotAtMeeting.Add(u);
+                        lstEmployeeNotAtMeeting.Items.Add(u.name + " " + u.surname);
+                    }
+                    else
+                    {
+                        customersNotAtMeeting.Add(u);
+                        lstCustomerNotAtMeeting.Items.Add(u.name + " " + u.surname);
+                    }
+                }
                 foreach (User u in meetingSelected.users)
                 {
                     if (u.type == 0 || u.type == 1)
                     {
                         employeesAtMeeting.Add(u);
                         lstEmployeeAtMeeting.Items.Add(u.name + " " + u.surname);
+
+                        employeesNotAtMeeting.Remove(u);
+                        lstEmployeeNotAtMeeting.Items.Remove(u.name + " " + u.surname);
                     }
                     else
                     {
                         customersAtMeeting.Add(u);
                         lstCustomerAtMeeting.Items.Add(u.name + " " + u.surname);
+
+                        customersNotAtMeeting.Remove(u);
+                        lstCustomerNotAtMeeting.Items.Remove(u.name + " " + u.surname);
                     }
                 }
             }

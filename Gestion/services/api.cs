@@ -10,7 +10,7 @@ namespace Gestion
 {
     class Api
     {
-        private string token { get; set; }
+        private User me;
 
         //public string host = "http://172.31.247.13:5000";
         public string host = "http://localhost:5000";
@@ -23,7 +23,6 @@ namespace Gestion
         public FactureService factures { get; set; }
         public Api()
         {
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             categories = new CategorieService(this);
             meetings = new MeetingService(this);
             products = new ProductService(this);
@@ -45,7 +44,7 @@ namespace Gestion
         {
             try
             {
-                HttpResponseMessage httpResponse = await this.client.GetAsync(this.host + url);
+                HttpResponseMessage httpResponse = await client.GetAsync(host + url);
                 string parseMessage = await httpResponse.Content.ReadAsStringAsync();
                 return JsonConvert.DeserializeObject(parseMessage);
             }
@@ -114,10 +113,22 @@ namespace Gestion
                 //envoi de la requête api et récupération de la réponse
                 StringContent content = new StringContent(JsonConvert.SerializeObject(tmpUser), Encoding.UTF8, "application/json");
                 HttpResponseMessage response = await client.PostAsync(host + "/api/v1/oauth/password", content);
-                dynamic deserialize = JsonConvert.DeserializeObject(await response.Content.ReadAsStringAsync());
+                string parseMessage = await response.Content.ReadAsStringAsync();
+                dynamic deserialize = JsonConvert.DeserializeObject(parseMessage);
 
                 //stockage du token
-                token = deserialize.token;
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Convert.ToString(deserialize.token));
+
+
+                dynamic res = await GetRequest("/api/v1/oauth/@me");
+                me = new User(
+                    Convert.ToString(res.id),
+                    Convert.ToString(res.name),
+                    Convert.ToString(res.surname),
+                    Convert.ToString(res.mail),
+                    Convert.ToInt16(res.type),
+                    Convert.ToString(res.password)
+                );
 
                 //envoi de la réponse api
                 return response.StatusCode.ToString();
@@ -130,7 +141,7 @@ namespace Gestion
         }
         public void killtoken()
         {
-            token = "";
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "");
         }
         #endregion
     }

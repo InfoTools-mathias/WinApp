@@ -242,10 +242,10 @@
 
                     <Label HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,325,375,0" Width="300" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="Type de compte :"/>
                     <ComboBox x:Name="cboUserType" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,350,375,0" Width="300" Height="25" FontSize="15px" Foreground="#19191e" SelectionChanged="cboUserType_SelectionChanged">
-                        <ComboBoxItem Content="Administrateur" Foreground="#19191e"/>
-                        <ComboBoxItem Content="Employé" Foreground="#19191e"/>
-                        <ComboBoxItem Content="Client" Foreground="#19191e"/>
-                        <ComboBoxItem Content="Prospect" Foreground="#19191e" Name="itemProspect"/>
+                        <ComboBoxItem x:Name="itemAdministrateur" Content="Administrateur" Foreground="#19191e"/>
+                        <ComboBoxItem x:Name="itemEmployé" Content="Employé" Foreground="#19191e"/>
+                        <ComboBoxItem x:Name="itemClient" Content="Client" Foreground="#19191e"/>
+                        <ComboBoxItem x:Name="itemProspect" Content="Prospect" Foreground="#19191e"/>
                     </ComboBox>
 
                     <Label x:Name="lblPassword" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,25,25,0" Width="300" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Visibility="Hidden" Content="Mot de passe :"/>
