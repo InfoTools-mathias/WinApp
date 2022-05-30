@@ -263,7 +263,7 @@
                     <Button x:Name="factureNew" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,400,475,0" Width="200" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="Nouvelle facture" Click="factureNew_Click"/>
                     <Button x:Name="factureValidate" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,400,250,0" Width="200" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="Valider la facture" Click="factureValidate_Click"/>
                     <Button x:Name="factureDelete" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,400,25,0" Width="200" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="Supprimer la facture" Click="factureDelete_Click"/>
-                    <Grid x:Name="facture" HorizontalAlignment="Right" Margin="0,450,25,125" Width="650" Background="White" Visibility="Hidden">
+                    <Grid x:Name="facture" HorizontalAlignment="Right" Margin="0,450,25,125" Width="650" Background="White" Visibility="Visible">
                         <Label HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0" Width="150" Height="25" FontSize="12px" Foreground="#000000" Background="Transparent" Content="Facture N°"/>
                         <TextBox x:Name="txtIDFacture" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,35,0,0" Width="200" Height="25" FontSize="12px" Foreground="#000000" Background="Transparent" IsEnabled="False"/>
 
@@ -274,8 +274,9 @@
                         <TextBox x:Name="txtClientFacture" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,35,10,0" Width="150" Height="25" FontSize="15px" Foreground="#000000" Background="Transparent" IsEnabled="False"/>
 
                         <Label HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,65,0,0" Height="25" FontSize="12px" Content="Produit :"/>
-                        <Label HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,65,110,0" Width="100" Height="25" FontSize="12px" Content="Quantité :"/>
-                        <Label HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,65,10,0" Width="100" Height="25" FontSize="12px" Content="Prix unitaire :"/>
+                        <Label HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,65,210,0" Width="100" Height="25" FontSize="12px" Content="Quantité :"/>
+                        <Label HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,65,110,0" Width="100" Height="25" FontSize="12px" Content="Prix unitaire :"/>
+                        <Label HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,65,10,0" Width="100" Height="25" FontSize="12px" Content="total de la ligne :"/>
                         <ListBox x:Name="lstLigneFacture" Margin="10,90,10,80" ItemsSource="{Binding}" FontFamily="Consolas" SelectionChanged="lstLigneFacture_SelectionChanged">
                             <ListBox.ItemContainerStyle>
                                 <Style TargetType="ListBoxItem">
@@ -285,19 +286,22 @@
                             </ListBox.ItemContainerStyle>
                         </ListBox>
 
+                        <TextBox x:Name="txtInvisibleIdLigne" Visibility="Hidden"/>
                         <Label HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="10,0,0,50" Width="100" Height="25" FontSize="12px" Content="Nouvelle ligne ->"/>
                         <Label HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="110,0,0,50" Width="105" Height="25" FontSize="12px" Content="Nom du produit :"/>
                         <TextBox x:Name="txtProductLigne" VerticalAlignment="Bottom" Margin="210,0,245,50" Height="25" FontSize="15px"/>
-                        <Label HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,170,50" Width="65" Height="25" FontSize="12px" Content="Quantité :"/>
-                        <TextBox x:Name="txtQuantityLigne" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,120,50" Width="50" Height="25" FontSize="15px" PreviewTextInput="IntValidationTextBox"/>
-                        <Label HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,60,50" Width="50" Height="25" FontSize="12px" Content="Client :"/>
-                        <TextBox x:Name="txtPriceLigne" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,10,50" Width="50" Height="25" FontSize="15px" PreviewTextInput="NumberValidationTextBox"/>
+                        <Label HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,185,50" Width="62" Height="25" FontSize="12px" Content="Quantité :"/>
+                        <TextBox x:Name="txtQuantityLigne" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,135,50" Width="50" Height="25" FontSize="15px" PreviewTextInput="IntValidationTextBox"/>
+                        <Label HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,85,50" Width="50" Height="25" FontSize="12px" Content="prix u :"/>
+                        <Label HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,10,50" Width="16" Height="25" FontSize="12px" Content="€"/>
+                        <TextBox x:Name="txtPriceLigne" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,10,50" Width="75" Height="25" FontSize="15px" Background="Transparent" PreviewTextInput="NumberValidationTextBox"/>
 
-                        <Button x:Name="ligneValidate" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="10,0,0,10" Width="150" Height="25" FontSize="12px" Background="Transparent" Content="Valider la ligne" Click="ligneValidate_Click"/>
-                        <Button x:Name="ligneDelete" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="170,0,0,10" Width="150" Height="25" FontSize="12px" Background="Transparent" Content="Supprimer la ligne" Click="ligneDelete_Click"/>
+                        <Button x:Name="newLine" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="10,0,0,10" Width="150" Height="25" FontSize="12px" Background="Transparent" Content="Nouvelle ligne" Click="newLine_Click"/>
+                        <Button x:Name="editLine" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="170,0,0,10" Width="150" Height="25" FontSize="12px" Background="Transparent" Content="Modifié la ligne" Click="editLine_Click"/>
+                        <Button x:Name="deleteLine" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="330,0,0,10" Width="150" Height="25" FontSize="12px" Background="Transparent" Content="Supprimer la ligne" Click="deleteLine_Click"/>
 
-                        <Label HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,60,10" Width="50" Height="25" FontSize="12px" Content="Total :"/>
-                        <TextBox x:Name="txtTotalFacture" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,10,10" Width="50" Height="25" FontSize="15px" IsEnabled="False"/>
+                        <Label HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,110,10" Width="50" Height="25" FontSize="12px" Content="Total :"/>
+                        <TextBox x:Name="txtTotalFacture" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,10,10" Width="100" Height="25" FontSize="15px" IsEnabled="False"/>
                     </Grid>
 
                     <Button x:Name="userAjouter" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,475,75" Width="200" Height="25" FontSize="12px" Foreground="#ffffff" Background="Transparent" Content="ajouter" Click="userAjouter_Click"/>

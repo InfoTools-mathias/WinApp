@@ -67,6 +67,7 @@
     <Compile Include="models\User.cs" />
     <Compile Include="services\CategorieService.cs" />
     <Compile Include="services\FactureService.cs" />
+    <Compile Include="services\LigneFactureService.cs" />
     <Compile Include="services\MeetingService.cs" />
     <Compile Include="services\ProductService.cs" />
     <Compile Include="services\UserService.cs" />

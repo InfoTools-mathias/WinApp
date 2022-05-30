@@ -21,6 +21,7 @@ namespace Gestion
         public ProductService products { get; set; }
         public UserService users { get; set; }
         public FactureService factures { get; set; }
+        public LigneFactureService lignes { get; set; }
         public Api()
         {
             categories = new CategorieService(this);
@@ -28,6 +29,7 @@ namespace Gestion
             products = new ProductService(this);
             users = new UserService(this);
             factures = new FactureService(this);
+            lignes = new LigneFactureService(this);
         }
 
         public async Task<string> Start()
@@ -44,6 +46,7 @@ namespace Gestion
         {
             try
             {
+                //Console.WriteLine(client.DefaultRequestHeaders);
                 HttpResponseMessage httpResponse = await client.GetAsync(host + url);
                 string parseMessage = await httpResponse.Content.ReadAsStringAsync();
                 return JsonConvert.DeserializeObject(parseMessage);
@@ -59,7 +62,11 @@ namespace Gestion
             try
             {
                 var content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
+                    Console.WriteLine("ce que j'envoie :");
+                    Console.WriteLine(content.ReadAsStringAsync().Result);
                 HttpResponseMessage response = await client.PostAsync(host + url, content);
+                    Console.WriteLine("retour de l'api :");
+                    Console.WriteLine(response);
                 return response;
             }
             catch (Exception ex)

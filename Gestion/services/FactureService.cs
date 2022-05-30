@@ -27,7 +27,7 @@ namespace Gestion
                         Convert.ToString(l.id),
                         Convert.ToString(l.product),
                         Convert.ToInt16(l.quantity),
-                        Convert.ToDouble(l.Price),
+                        Convert.ToDouble(l.price),
                         Convert.ToString(l.factureId)
                     ));
                 }

@@ -300,7 +300,17 @@ namespace Gestion
                         employeesAtMeeting.Add(u);
                         lstEmployeeAtMeeting.Items.Add(u.name + " " + u.surname);
 
-                        employeesNotAtMeeting.Remove(u);
+                        Int16 i = 0;
+                        List<Int16> lstI = new List<Int16>();
+                        foreach (User u2 in employeesNotAtMeeting)
+                        {
+                            if( u.id == u2.id) lstI.Add(i);
+                            i++;
+                        }
+                        foreach (Int16 index in lstI)
+                        {
+                            employeesNotAtMeeting.RemoveAt(index);
+                        }
                         lstEmployeeNotAtMeeting.Items.Remove(u.name + " " + u.surname);
                     }
                     else
@@ -308,7 +318,17 @@ namespace Gestion
                         customersAtMeeting.Add(u);
                         lstCustomerAtMeeting.Items.Add(u.name + " " + u.surname);
 
-                        customersNotAtMeeting.Remove(u);
+                        Int16 i = 0;
+                        List<Int16> lstI = new List<Int16>();
+                        foreach (User u2 in customersNotAtMeeting)
+                        {
+                            if (u.id == u2.id) lstI.Add(i);
+                            i++;
+                        }
+                        foreach (Int16 index in lstI)
+                        {
+                            customersNotAtMeeting.RemoveAt(index);
+                        }
                         lstCustomerNotAtMeeting.Items.Remove(u.name + " " + u.surname);
                     }
                 }
@@ -821,6 +841,7 @@ namespace Gestion
         #endregion
         #region Factures
         List<Facture> factures = new List<Facture>();
+        List<LigneFacture> LignesFacture = new List<LigneFacture>();
         private void hideFacture()
         {
             lstFacture.Items.Clear();
@@ -840,6 +861,17 @@ namespace Gestion
                 txtIDFacture.Text = selectedFacture.id;
                 txtDateFacture.Text = Convert.ToString(selectedFacture.date);
                 txtClientFacture.Text = users[lstUser.SelectedIndex].name + " " + users[lstUser.SelectedIndex].surname;
+
+                LignesFacture.Clear();
+                lstLigneFacture.Items.Clear();
+                double total = 0;
+                foreach(LigneFacture lf in selectedFacture.lignes)
+                {
+                    LignesFacture.Add(lf);
+                    lstLigneFacture.Items.Add(lf.product.PadRight(40) + lf.quantity.ToString().PadRight(12) + lf.price.ToString().PadRight(12) + (lf.quantity*lf.price).ToString());
+                    total += lf.price * lf.quantity;
+                }
+                txtTotalFacture.Text = total.ToString();
             }
             else
             {
@@ -857,6 +889,7 @@ namespace Gestion
 
                 lstFacture.Items.Add("en cours...");
                 factures.Add(new Facture("", DateTime.Now, new List<LigneFacture>(), txtIDUser.Text));
+                txtIDFacture.Text = "";
                 txtClientFacture.Text = users[lstUser.SelectedIndex].name;
                 txtDateFacture.Text = DateTime.Now.ToString();
             }
@@ -865,7 +898,7 @@ namespace Gestion
         {
             if (txtIDFacture.Text == "") await client.factures.Post(new Facture(
                 "",
-                new DateTime(),
+                DateTime.Now,
                 LignesFacture,
                 txtIDUser.Text
             ));
@@ -875,6 +908,7 @@ namespace Gestion
                 LignesFacture,
                 txtIDUser.Text
             ));
+            refresh();
         }
         private async void factureDelete_Click(object sender, RoutedEventArgs e)
         {
@@ -892,8 +926,8 @@ namespace Gestion
                 lblWrong.Content = "Pour supprimer une facture, il faut la sélectionner";
             }
         }
+
         #region LigneFacture
-        List<LigneFacture> LignesFacture = new List<LigneFacture>();
         private void hideLines()
         {
             lstLigneFacture.Items.Clear();
@@ -906,20 +940,58 @@ namespace Gestion
         {
             if (lstLigneFacture.SelectedIndex >= 0)
             {
-                
+                LigneFacture selectedLigne = LignesFacture[lstLigneFacture.SelectedIndex];
+                txtInvisibleIdLigne.Text = selectedLigne.id;
+                txtProductLigne.Text = selectedLigne.product;
+                txtQuantityLigne.Text = selectedLigne.quantity.ToString();
+                txtPriceLigne.Text = selectedLigne.price.ToString();
             }
             else
             {
                 hideLines();
             }
         }
-        private void ligneValidate_Click(object sender, RoutedEventArgs e)
+        private async void newLine_Click(object sender, RoutedEventArgs e)
         {
-
+            if (txtProductLigne.Text != "" && txtQuantityLigne.Text != "" && txtPriceLigne.Text != "")
+            {
+                await client.lignes.Post(new LigneFacture(
+                    "",
+                    txtProductLigne.Text,
+                    Convert.ToInt16(txtQuantityLigne.Text),
+                    Convert.ToDouble(txtPriceLigne.Text),
+                    txtIDFacture.Text
+                ));
+                refresh();
+            }
+            else
+            {
+                lblWrong.Content = "Il faut indiquer le nom du produit, la quantité et le prix avant de valider la ligne.";
+            }
         }
-        private void ligneDelete_Click(object sender, RoutedEventArgs e)
+        private async void editLine_Click(object sender, RoutedEventArgs e)
         {
-
+            if (txtProductLigne.Text != "" && txtQuantityLigne.Text != "" && txtPriceLigne.Text != "")
+            {
+                await client.lignes.Delete(txtIDFacture.Text, txtInvisibleIdLigne.Text);
+                await client.lignes.Post(new LigneFacture(
+                    txtInvisibleIdLigne.Text,
+                    txtProductLigne.Text,
+                    Convert.ToInt16(txtQuantityLigne.Text),
+                    Convert.ToDouble(txtPriceLigne.Text),
+                    txtIDFacture.Text
+                ));
+                refresh();
+            }
+            else
+            {
+                lblWrong.Content = "Il faut indiquer le nom du produit, la quantité et le prix avant de valider la ligne.";
+            }
+        }
+        private async void deleteLine_Click(object sender, RoutedEventArgs e)
+        {
+            await client.lignes.Delete(txtIDFacture.Text, txtInvisibleIdLigne.Text);
+            refresh();
         }
         #endregion
         #endregion
