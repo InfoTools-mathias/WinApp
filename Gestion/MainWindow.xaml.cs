@@ -25,7 +25,7 @@ namespace Gestion
             txtID.Text = "m.g@gmail.com";
             txtPW.Password = "azerty";
         }
-        Api api = new Api();
+        Api client = new Api();
         #region fonction clear()
         public void clear()
         {
@@ -45,22 +45,22 @@ namespace Gestion
 
         async void btnSession_Click(object sender, RoutedEventArgs e)
         {
-            string response = await api.auth(new User("", "", "", txtID.Text, 3, txtPW.Password));
-            if (response == "OK")
+            string response = await client.auth(new User("", "", "", txtID.Text, 3, txtPW.Password));
+            if (response == "error")
             {
-                gestion a = new gestion();
-                a.Show();
-                clear();
-                this.Close();
+                lblWrong.Content = "Problème lors de la connexion avec la base de donnée.";
             }
             else if (response == "Unauthorized")
             {
                 txtPW.Password = "";
                 lblWrong.Content = "Identifiant ou mot de passe invalide.";
             }
-            else if(response == "error")
+            else
             {
-                lblWrong.Content = "Problème lors de la connexion avec la base de donnée.";
+                gestion a = new gestion(response);
+                a.Show();
+                clear();
+                this.Close();
             }
         }
     }

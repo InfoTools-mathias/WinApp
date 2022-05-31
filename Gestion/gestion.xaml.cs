@@ -29,11 +29,12 @@ namespace Gestion
 {
     public partial class gestion : Window
     {
-        public gestion()
+        public gestion(string token)
         {
             InitializeComponent();
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
             refresh();
+            client.getToken(token);
         }
         Api client = new Api();
 

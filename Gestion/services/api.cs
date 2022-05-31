@@ -4,17 +4,14 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using Newtonsoft.Json.Linq;
 
 namespace Gestion
 {
     class Api
     {
-        private User me;
-
-        //public string host = "http://172.31.247.13:5000";
-        public string host = "http://localhost:5000";
-        public HttpClient client = new HttpClient();
+        private readonly string host = "http://localhost:5000";
+        private HttpClient client = new HttpClient();
+        private string token;
 
         public CategorieService categories { get; set; }
         public MeetingService meetings { get; set; }
@@ -44,10 +41,12 @@ namespace Gestion
 
         public async Task<dynamic> GetRequest(string url)
         {
+            this.client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Convert.ToString(this.token));
             try
             {
-                //Console.WriteLine(client.DefaultRequestHeaders);
-                HttpResponseMessage httpResponse = await client.GetAsync(host + url);
+                    //Console.WriteLine("Authorization : " + this.client.DefaultRequestHeaders.Authorization);
+                    Console.WriteLine("token : " + this.token);
+                HttpResponseMessage httpResponse = await this.client.GetAsync(host + url);
                 string parseMessage = await httpResponse.Content.ReadAsStringAsync();
                 return JsonConvert.DeserializeObject(parseMessage);
             }
@@ -59,12 +58,13 @@ namespace Gestion
         }
         public async Task<HttpResponseMessage> PostRequest(string url, dynamic data)
         {
+            this.client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Convert.ToString(this.token));
             try
             {
                 var content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
                     Console.WriteLine("ce que j'envoie :");
                     Console.WriteLine(content.ReadAsStringAsync().Result);
-                HttpResponseMessage response = await client.PostAsync(host + url, content);
+                HttpResponseMessage response = await this.client.PostAsync(host + url, content);
                     Console.WriteLine("retour de l'api :");
                     Console.WriteLine(response);
                 return response;
@@ -77,12 +77,13 @@ namespace Gestion
         }
         public async Task<HttpResponseMessage> PutRequest(string url, dynamic data)
         {
+            this.client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Convert.ToString(this.token));
             try
             {
                 var content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
                     Console.WriteLine("ce que j'envoie :");
                     Console.WriteLine(content.ReadAsStringAsync().Result);
-                HttpResponseMessage response = await client.PutAsync(host + url, content);
+                HttpResponseMessage response = await this.client.PutAsync(host + url, content);
                     Console.WriteLine("retour de l'api :");
                     Console.WriteLine(response);
                 return response;
@@ -95,9 +96,10 @@ namespace Gestion
         }
         public async Task<HttpResponseMessage> DeleteRequest(string url)
         {
+            this.client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Convert.ToString(this.token));
             try
             {
-                return await client.DeleteAsync(host + url);
+                return await this.client.DeleteAsync(host + url);
             }
             catch (Exception ex)
             {
@@ -115,30 +117,20 @@ namespace Gestion
                 //encodage mail et mot de passe
                 string tmp = Convert.ToBase64String(Encoding.UTF8.GetBytes(tmpUser.mail + ":" + tmpUser.password));
                 //création du header de la requête
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", tmp);
+                this.client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", tmp);
 
                 //envoi de la requête api et récupération de la réponse
                 StringContent content = new StringContent(JsonConvert.SerializeObject(tmpUser), Encoding.UTF8, "application/json");
-                HttpResponseMessage response = await client.PostAsync(host + "/api/v1/oauth/password", content);
+                HttpResponseMessage response = await this.client.PostAsync(host + "/api/v1/oauth/password", content);
                 string parseMessage = await response.Content.ReadAsStringAsync();
                 dynamic deserialize = JsonConvert.DeserializeObject(parseMessage);
 
                 //stockage du token
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Convert.ToString(deserialize.token));
-
-
-                dynamic res = await GetRequest("/api/v1/oauth/@me");
-                me = new User(
-                    Convert.ToString(res.id),
-                    Convert.ToString(res.name),
-                    Convert.ToString(res.surname),
-                    Convert.ToString(res.mail),
-                    Convert.ToInt16(res.type),
-                    Convert.ToString(res.password)
-                );
+                this.client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Convert.ToString(deserialize.token));
 
                 //envoi de la réponse api
-                return response.StatusCode.ToString();
+                if (response.StatusCode.ToString() == "OK") return Convert.ToString(deserialize.token);
+                else return "Unauthorized";
             }
             catch (JsonException ex)
             {
@@ -146,9 +138,13 @@ namespace Gestion
                 return "error";
             }
         }
+        public void getToken(string token)
+        {
+            this.token = token;
+        }
         public void killtoken()
         {
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "");
+            this.client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "");
         }
         #endregion
     }
