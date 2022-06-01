@@ -1,17 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 /** Comment récupérer les données ?
  * 1. les fonctions globals pour faire des appels API sont dans "services/api.cs". Des instances de chaque services y sont définie.
@@ -370,7 +362,7 @@ namespace Gestion
         }
         private async void meetingModifier_Click(object sender, RoutedEventArgs e)
         {
-            if (txtIDMeeting.Text != "" || txtDateMeeting.Text != "" || txtHourMeeting.Text != "" || txtMinuteMeeting.Text != "" || txtZipMeeting.Text != "" || txtAdressMeeting.Text != "" || customersAtMeeting.Count > 0)
+            if (txtIDMeeting.Text != null || txtDateMeeting.Text != null || txtHourMeeting.Text != null || txtMinuteMeeting.Text != null || txtZipMeeting.Text != null || txtAdressMeeting.Text != null || customersAtMeeting.Count > 0)
             {
                 List<User> users = new List<User>();
                 foreach (User u in customersAtMeeting)
@@ -675,7 +667,6 @@ namespace Gestion
                 txtSurnameUser.Text = selectedUser.surname;
                 txtMailUser.Text = selectedUser.mail;
                 cboUserType.Text = client.users.GetStringType(selectedUser.type);
-                txtPasswordUser.Password = selectedUser.password;
 
                 #region client can't become prospect
                 if (client.users.GetStringType(selectedUser.type) == "Client")
@@ -738,26 +729,19 @@ namespace Gestion
         {
             if (txtIDUser.Text != "" || txtNameUser.Text != "" || txtSurnameUser.Text != "" || txtMailUser.Text != "" || cboUserType.SelectedValue != null)
             {
-                if (txtPasswordUser.Password == "" && (client.users.GetIntType(cboUserType.Text) == 0 || client.users.GetIntType(cboUserType.Text) == 1))
-                {
-                    lblWrong.Content = "Un compte emplyé ou administrateur nécessite un mot de passe.";
-                }
-                else
-                {
-                    int tmpType = client.users.GetIntType(cboUserType.Text);
-                    if (factures.Count == 0 && tmpType == 2) tmpType = 3;
-                    if (factures.Count > 0 && tmpType == 3) tmpType = 2;
-                    User tmpUser = new User(
-                        txtIDUser.Text,
-                        txtNameUser.Text,
-                        txtSurnameUser.Text,
-                        txtMailUser.Text,
-                        tmpType,
-                        txtPasswordUser.Password
-                    );
-                    await client.users.Put(tmpUser);
-                    refresh();
-                }
+                int tmpType = client.users.GetIntType(cboUserType.Text);
+                if (factures.Count == 0 && tmpType == 2) tmpType = 3;
+                if (factures.Count > 0 && tmpType == 3) tmpType = 2;
+                User tmpUser = new User(
+                    txtIDUser.Text,
+                    txtNameUser.Text,
+                    txtSurnameUser.Text,
+                    txtMailUser.Text,
+                    tmpType,
+                    null
+                );
+                await client.users.Put(tmpUser);
+                refresh();
             }
             else
             {
@@ -974,8 +958,7 @@ namespace Gestion
         {
             if (txtProductLigne.Text != "" && txtQuantityLigne.Text != "" && txtPriceLigne.Text != "")
             {
-                await client.lignes.Delete(txtIDFacture.Text, txtInvisibleIdLigne.Text);
-                await client.lignes.Post(new LigneFacture(
+                await client.lignes.Put(new LigneFacture(
                     txtInvisibleIdLigne.Text,
                     txtProductLigne.Text,
                     Convert.ToInt16(txtQuantityLigne.Text),

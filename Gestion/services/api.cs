@@ -11,7 +11,6 @@ namespace Gestion
     {
         private readonly string host = "http://localhost:5000";
         private HttpClient client = new HttpClient();
-        private string token;
 
         public CategorieService categories { get; set; }
         public MeetingService meetings { get; set; }
@@ -41,11 +40,9 @@ namespace Gestion
 
         public async Task<dynamic> GetRequest(string url)
         {
-            this.client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Convert.ToString(this.token));
             try
             {
                     //Console.WriteLine("Authorization : " + this.client.DefaultRequestHeaders.Authorization);
-                    Console.WriteLine("token : " + this.token);
                 HttpResponseMessage httpResponse = await this.client.GetAsync(host + url);
                 string parseMessage = await httpResponse.Content.ReadAsStringAsync();
                 return JsonConvert.DeserializeObject(parseMessage);
@@ -58,7 +55,6 @@ namespace Gestion
         }
         public async Task<HttpResponseMessage> PostRequest(string url, dynamic data)
         {
-            this.client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Convert.ToString(this.token));
             try
             {
                 var content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
@@ -77,10 +73,10 @@ namespace Gestion
         }
         public async Task<HttpResponseMessage> PutRequest(string url, dynamic data)
         {
-            this.client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Convert.ToString(this.token));
             try
             {
                 var content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
+                    Console.WriteLine("Authorization : " + this.client.DefaultRequestHeaders.Authorization);
                     Console.WriteLine("ce que j'envoie :");
                     Console.WriteLine(content.ReadAsStringAsync().Result);
                 HttpResponseMessage response = await this.client.PutAsync(host + url, content);
@@ -96,10 +92,10 @@ namespace Gestion
         }
         public async Task<HttpResponseMessage> DeleteRequest(string url)
         {
-            this.client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Convert.ToString(this.token));
             try
             {
-                return await this.client.DeleteAsync(host + url);
+                HttpResponseMessage response = await this.client.DeleteAsync(host + url);
+                return response;
             }
             catch (Exception ex)
             {
@@ -140,7 +136,7 @@ namespace Gestion
         }
         public void getToken(string token)
         {
-            this.token = token;
+            this.client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Convert.ToString(token));
         }
         public void killtoken()
         {
